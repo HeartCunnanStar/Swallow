@@ -1,0 +1,31 @@
+#pragma once
+
+#ifdef SW_PLATFORMS_WINDOWS
+	#if defined(SW_BUILD_DLL)
+		#define SWALLOW_API __declspec(dllexport)
+	#else
+		#define SWALLOW_API __declspec(dllimport)
+	#endif
+#else
+	#error Swallow only for windows
+#endif
+
+#ifdef SW_ENABLE_ASSERTS
+	#define SW_ASSERT(x, ...) {								\
+		if(!(x)) {											\	
+			SW_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+			__debugbreak();									\
+		}													\
+	}														\
+	#define SW_CORE_ASSERT(x, ...) {						\
+		if(!(x)) {											\
+			SW_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__);\ 
+			__debugbreak();									\
+		}													\
+	}		
+#else
+	#define SW_ASSERT(x, ...)
+	#define SW_CORE_ASSERT(x, ...)
+#endif
+
+#define BIT(x) (1 << x)

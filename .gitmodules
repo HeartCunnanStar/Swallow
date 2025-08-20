@@ -1,0 +1,9 @@
+[submodule "Swallow/third_party/spdlog"]
+	path = Swallow/third_party/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Swallow/third_party/GLFW"]
+	path = Swallow/third_party/GLFW
+	url = https://github.com/TheCherno/glfw
+[submodule "Swallow/third_party/imgui"]
+	path = Swallow/third_party/imgui
+	url = https://github.com/TheCherno/imgui
