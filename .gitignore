@@ -2,5 +2,6 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/.vs/Swallow
-*.sln
+.vs/
+/bin/Debug-windows-x86_64
+/bin-int/Debug-windows-x86_64
