@@ -9,8 +9,13 @@ namespace Swallow {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+	Application* Application::s_instance = nullptr;
+
 	Application::Application()
 	{
+		SW_CORE_ASSERT(!s_instance, "Application instance already had one");
+		s_instance = this;
+
 		m_window = std::unique_ptr<Window>(Window::Create());
 		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 	}
