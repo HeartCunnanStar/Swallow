@@ -33,11 +33,11 @@ namespace Swallow {
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
-		m_data.Title = props.Title;
-		m_data.Width = props.Width;
-		m_data.Height = props.Height;
+		m_data.title = props.title;
+		m_data.width = props.width;
+		m_data.height = props.height;
 
-		SW_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+		SW_CORE_INFO("Creating window {0} ({1}, {2})", props.title, props.width, props.height);
 
 		if (!s_GLFWInitialized)
 		{
@@ -48,7 +48,7 @@ namespace Swallow {
 			s_GLFWInitialized = true;
 		}
 
-		m_window = glfwCreateWindow((int)props.Width, (int)props.Height, m_data.Title.c_str(), nullptr, nullptr);
+		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_window);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		SW_CORE_ASSERT(status, "Failed to initialize Glad!");
@@ -59,18 +59,18 @@ namespace Swallow {
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				data.Width = width;
-				data.Height = height;
+				data.width = width;
+				data.height = height;
 
 				WindowResizeEvent event(width, height);
-				data.EventCallback(event);
+				data.event_callback(event);
 			});
 
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				WindowCloseEvent event;
-				data.EventCallback(event);
+				data.event_callback(event);
 			});
 
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -82,19 +82,19 @@ namespace Swallow {
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent event(key, 0);
-					data.EventCallback(event);
+					data.event_callback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent event(key);
-					data.EventCallback(event);
+					data.event_callback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent event(key, 1);
-					data.EventCallback(event);
+					data.event_callback(event);
 					break;
 				}
 				}
@@ -109,13 +109,13 @@ namespace Swallow {
 				case GLFW_PRESS:
 				{
 					MouseButtonPressedEvent event(button);
-					data.EventCallback(event);
+					data.event_callback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent event(button);
-					data.EventCallback(event);
+					data.event_callback(event);
 					break;
 				}
 				}
@@ -126,7 +126,7 @@ namespace Swallow {
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				MouseScrolledEvent event((float)xOffset, (float)yOffset);
-				data.EventCallback(event);
+				data.event_callback(event);
 			});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
@@ -134,7 +134,7 @@ namespace Swallow {
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				MouseMovedEvent event((float)xPos, (float)yPos);
-				data.EventCallback(event);
+				data.event_callback(event);
 			});
 	}
 
@@ -156,12 +156,12 @@ namespace Swallow {
 		else
 			glfwSwapInterval(0);
 
-		m_data.VSync = enabled;
+		m_data.is_vertical_sync = enabled;
 	}
 
 	bool WindowsWindow::IsVSync() const
 	{
-		return m_data.VSync;
+		return m_data.is_vertical_sync;
 	}
 
 }

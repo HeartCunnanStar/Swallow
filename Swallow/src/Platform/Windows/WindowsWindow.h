@@ -14,11 +14,11 @@ namespace Swallow {
 
 		void OnUpdate() override;
 
-		inline unsigned int GetWidth() const override { return m_data.Width; }
-		inline unsigned int GetHeight() const override { return m_data.Height; }
+		inline unsigned int GetWidth() const override { return m_data.width; }
+		inline unsigned int GetHeight() const override { return m_data.height; }
 
 		// Window attributes
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_data.EventCallback = callback; }
+		inline void SetEventCallback(const EventCallbackFn& callback) override { m_data.event_callback = callback; }
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 	private:
@@ -29,11 +29,11 @@ namespace Swallow {
 
 		struct WindowData
 		{
-			std::string Title;
-			unsigned int Width, Height;
-			bool VSync;
+			std::string title;
+			unsigned int width, height;
+			bool is_vertical_sync;
 
-			EventCallbackFn EventCallback;
+			EventCallbackFn event_callback;
 		};
 
 		WindowData m_data;

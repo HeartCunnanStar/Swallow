@@ -1,3 +1,67 @@
-﻿    正在创建库 ..\bin\Debug-windows-x86_64\Swallow\Swallow.lib 和对象 ..\bin\Debug-windows-x86_64\Swallow\Swallow.exp
-LINK : warning LNK4098: 默认库“LIBCMT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+﻿  WindowsWindow.cpp
+  Application.cpp
+D:\Program\Swallow\Swallow\src\Swallow\Layer.h(21,15): warning C4251: “Swallow::Layer::m_debug_name”:“std::basic_string<char,std::char_traits<char>,std::allocator<char>>”需要有 dll 接口以供“Swallow::Layer”的客户端使用
+  (编译源文件“/src/Swallow/Application.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\xstring(522,7):
+      参见“std::basic_string<char,std::char_traits<char>,std::allocator<char>>”的声明
+  
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(24,23): warning C4251: “Swallow::LayerStack::m_layers”:“std::vector<Swallow::Layer *,std::allocator<Swallow::Layer *>>”需要有 dll 接口以供“Swallow::LayerStack”的客户端使用
+  (编译源文件“/src/Swallow/Application.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\vector(429,7):
+      参见“std::vector<Swallow::Layer *,std::allocator<Swallow::Layer *>>”的声明
+  
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251: “Swallow::LayerStack::m_layer_insert”:“std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>”需要有 dll 接口以供“Swallow::LayerStack”的客户端使用
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:         with
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:         [
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:             _Ty=Swallow::Layer *
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:         ]
+  (编译源文件“/src/Swallow/Application.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\vector(255,7):
+      参见“std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>”的声明
+          with
+          [
+              _Ty=Swallow::Layer *
+          ]
+  
+D:\Program\Swallow\Swallow\src\Swallow\Application.h(34,27): warning C4251: “Swallow::Application::m_window”:“std::unique_ptr<Swallow::Window,std::default_delete<Swallow::Window>>”需要有 dll 接口以供“Swallow::Application”的客户端使用
+  (编译源文件“/src/Swallow/Application.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\memory(3332,7):
+      参见“std::unique_ptr<Swallow::Window,std::default_delete<Swallow::Window>>”的声明
+  
+  ImGuiLayer.cpp
+D:\Program\Swallow\Swallow\src\Swallow\Layer.h(21,15): warning C4251: “Swallow::Layer::m_debug_name”:“std::basic_string<char,std::char_traits<char>,std::allocator<char>>”需要有 dll 接口以供“Swallow::Layer”的客户端使用
+  (编译源文件“/src/Swallow/ImGui/ImGuiLayer.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\xstring(522,7):
+      参见“std::basic_string<char,std::char_traits<char>,std::allocator<char>>”的声明
+  
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(24,23): warning C4251: “Swallow::LayerStack::m_layers”:“std::vector<Swallow::Layer *,std::allocator<Swallow::Layer *>>”需要有 dll 接口以供“Swallow::LayerStack”的客户端使用
+  (编译源文件“/src/Swallow/ImGui/ImGuiLayer.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\vector(429,7):
+      参见“std::vector<Swallow::Layer *,std::allocator<Swallow::Layer *>>”的声明
+  
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251: “Swallow::LayerStack::m_layer_insert”:“std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>”需要有 dll 接口以供“Swallow::LayerStack”的客户端使用
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:         with
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:         [
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:             _Ty=Swallow::Layer *
+D:\Program\Swallow\Swallow\src\Swallow\LayerStack.h(25,33): warning C4251:         ]
+  (编译源文件“/src/Swallow/ImGui/ImGuiLayer.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\vector(255,7):
+      参见“std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>”的声明
+          with
+          [
+              _Ty=Swallow::Layer *
+          ]
+  
+D:\Program\Swallow\Swallow\src\Swallow\Application.h(34,27): warning C4251: “Swallow::Application::m_window”:“std::unique_ptr<Swallow::Window,std::default_delete<Swallow::Window>>”需要有 dll 接口以供“Swallow::Application”的客户端使用
+  (编译源文件“/src/Swallow/ImGui/ImGuiLayer.cpp”)
+      D:\vs\2022\Community\VC\Tools\MSVC\14.43.34808\include\memory(3332,7):
+      参见“std::unique_ptr<Swallow::Window,std::default_delete<Swallow::Window>>”的声明
+  
+D:\Program\Swallow\Swallow\src\Swallow\ImGui\ImGuiLayer.cpp(66,80): warning C4244: “参数”: 从“unsigned int”转换到“float”，可能丢失数据
+  (编译源文件“/src/Swallow/ImGui/ImGuiLayer.cpp”)
+  
+D:\Program\Swallow\Swallow\src\Swallow\ImGui\ImGuiLayer.cpp(66,51): warning C4244: “参数”: 从“unsigned int”转换到“float”，可能丢失数据
+  (编译源文件“/src/Swallow/ImGui/ImGuiLayer.cpp”)
+  
+  正在生成代码...
   Swallow.vcxproj -> D:\Program\Swallow\bin\Debug-windows-x86_64\Swallow\Swallow.dll
