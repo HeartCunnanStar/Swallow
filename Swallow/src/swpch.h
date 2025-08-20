@@ -15,6 +15,6 @@
 
 #include "Swallow/Log.h"
 
-#ifdef SW_PLATFORM_WINDOWS
+#ifdef SW_PLATFORMS_WINDOWS
 #include <Windows.h>
 #endif

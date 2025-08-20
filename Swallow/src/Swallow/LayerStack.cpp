@@ -5,40 +5,40 @@ namespace Swallow {
 
 	LayerStack::LayerStack()
 	{
-		m_LayerInsert = m_Layers.begin();
+		m_layer_insert = m_layers.begin();
 	}
 
 	LayerStack::~LayerStack()
 	{
-		for (Layer* layer : m_Layers)
+		for (Layer* layer : m_layers)
 			delete layer;
 	}
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+		m_layer_insert = m_layers.emplace(m_layer_insert, layer);
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		m_Layers.emplace_back(overlay);
+		m_layers.emplace_back(overlay);
 	}
 
 	void LayerStack::PopLayer(Layer* layer)
 	{
-		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
-		if (it != m_Layers.end())
+		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
+		if (it != m_layers.end())
 		{
-			m_Layers.erase(it);
-			m_LayerInsert--;
+			m_layers.erase(it);
+			m_layer_insert--;
 		}
 	}
 
 	void LayerStack::PopOverlay(Layer* overlay)
 	{
-		auto it = std::find(m_Layers.begin(), m_Layers.end(), overlay);
-		if (it != m_Layers.end())
-			m_Layers.erase(it);
+		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
+		if (it != m_layers.end())
+			m_layers.erase(it);
 	}
 
 }

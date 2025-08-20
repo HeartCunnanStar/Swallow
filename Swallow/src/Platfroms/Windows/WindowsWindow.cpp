@@ -33,9 +33,9 @@ namespace Swallow {
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
-		m_Data.Title = props.Title;
-		m_Data.Width = props.Width;
-		m_Data.Height = props.Height;
+		m_data.Title = props.Title;
+		m_data.Width = props.Width;
+		m_data.Height = props.Height;
 
 		SW_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
@@ -48,15 +48,15 @@ namespace Swallow {
 			s_GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
+		m_window = glfwCreateWindow((int)props.Width, (int)props.Height, m_data.Title.c_str(), nullptr, nullptr);
+		glfwMakeContextCurrent(m_window);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		SW_CORE_ASSERT(status, "Failed to initialize Glad!");
-		glfwSetWindowUserPointer(m_Window, &m_Data);
+		glfwSetWindowUserPointer(m_window, &m_data);
 		SetVSync(true);
 
 		// Set GLFW callbacks
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				data.Width = width;
@@ -66,14 +66,14 @@ namespace Swallow {
 				data.EventCallback(event);
 			});
 
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				WindowCloseEvent event;
 				data.EventCallback(event);
 			});
 
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -100,7 +100,7 @@ namespace Swallow {
 				}
 			});
 
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -121,7 +121,7 @@ namespace Swallow {
 				}
 			});
 
-		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
+		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -129,7 +129,7 @@ namespace Swallow {
 				data.EventCallback(event);
 			});
 
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
+		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -140,13 +140,13 @@ namespace Swallow {
 
 	void WindowsWindow::Shutdown()
 	{
-		glfwDestroyWindow(m_Window);
+		glfwDestroyWindow(m_window);
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		glfwSwapBuffers(m_window);
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
@@ -156,12 +156,12 @@ namespace Swallow {
 		else
 			glfwSwapInterval(0);
 
-		m_Data.VSync = enabled;
+		m_data.VSync = enabled;
 	}
 
 	bool WindowsWindow::IsVSync() const
 	{
-		return m_Data.VSync;
+		return m_data.VSync;
 	}
 
 }

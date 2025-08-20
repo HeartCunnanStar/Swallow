@@ -158,6 +158,36 @@ IF EXIST ..\bin\Dist-windows-x86_64\Swallow\Swallow.dll\ (xcopy /Q /E /Y /I ..\b
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Swallow\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Swallow\Events\Event.h" />
+    <ClInclude Include="src\Swallow\Events\KeyEvent.h" />
+    <ClInclude Include="src\Swallow\Events\MouseEvent.h" />
+    <ClInclude Include="src\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Platfroms\OpenGL\ImOpenGlRenderer.h" />
+    <ClInclude Include="src\Platfroms\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\Swallow.h" />
+    <ClInclude Include="src\Swallow\Application.h" />
+    <ClInclude Include="src\Swallow\Core.h" />
+    <ClInclude Include="src\Swallow\EntryPoint.h" />
+    <ClInclude Include="src\Swallow\Layer.h" />
+    <ClInclude Include="src\Swallow\LayerStack.h" />
+    <ClInclude Include="src\Swallow\Log.h" />
+    <ClInclude Include="src\Swallow\Window.h" />
+    <ClInclude Include="src\swpch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Platfroms\OpenGL\ImOpenGlRenderer.cpp" />
+    <ClCompile Include="src\Platfroms\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="src\Swallow\Application.cpp" />
+    <ClCompile Include="src\Swallow\Layer.cpp" />
+    <ClCompile Include="src\Swallow\LayerStack.cpp" />
+    <ClCompile Include="src\Swallow\Log.cpp" />
+    <ClCompile Include="src\swpch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="third_party\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
@@ -167,34 +197,6 @@ IF EXIST ..\bin\Dist-windows-x86_64\Swallow\Swallow.dll\ (xcopy /Q /E /Y /I ..\b
     <ProjectReference Include="third_party\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\Events\MouseEvent.h" />
-    <ClCompile Include="src\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\ImGui\ImGuiLayer.h" />
-    <ClCompile Include="src\Swallow\LayerStack.cpp" />
-    <ClCompile Include="src\Platfroms\OpenGL\ImOpenGlRenderer.cpp" />
-    <ClCompile Include="src\Platfroms\Windows\WindowsWindow.cpp" />
-    <ClCompile Include="src\Swallow\Application.cpp" />
-    <ClCompile Include="src\Swallow\Layer.cpp" />
-    <ClCompile Include="src\Swallow\Log.cpp" />
-    <ClCompile Include="src\swpch.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Events\Event.h" />
-    <ClInclude Include="src\Events\KeyEvent.h" />
-    <ClInclude Include="src\Swallow\LayerStack.h" />
-    <ClInclude Include="src\Platfroms\OpenGL\ImOpenGlRenderer.h" />
-    <ClInclude Include="src\Platfroms\Windows\WindowsWindow.h" />
-    <ClInclude Include="src\Swallow.h" />
-    <ClInclude Include="src\Swallow\Application.h" />
-    <ClInclude Include="src\Swallow\Core.h" />
-    <ClInclude Include="src\Swallow\EntryPoint.h" />
-    <ClInclude Include="src\Swallow\Layer.h" />
-    <ClInclude Include="src\Swallow\Log.h" />
-    <ClInclude Include="src\Swallow\Window.h" />
-    <ClInclude Include="src\swpch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,17 +17,19 @@ namespace Swallow {
 		Application();
 		virtual ~Application();
 
-		void run();
+		void Run();
+
+		void OnEvent(Event& event);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
 	private:
-		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowClose(WindowCloseEvent& event);
 
-		std::unique_ptr<Window> m_Window;
-		bool m_Running = true;
-		LayerStack m_LayerStack;
+		std::unique_ptr<Window> m_window;
+		bool m_running = true;
+		LayerStack m_layer_stack;
 	};
 
 	// to be defined in CLIENT

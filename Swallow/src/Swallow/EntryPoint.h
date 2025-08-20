@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 	SW_INFO("Hello?");
 
 	auto app = Swallow::CreateApplication();
-	app->run();
+	app->Run();
 	delete app;
 }
 

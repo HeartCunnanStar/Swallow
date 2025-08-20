@@ -29,15 +29,15 @@ namespace Swallow {
 		m_layer_stack.PushOverlay(layer);
 	}
 
-	void Application::OnEvent(Event& e)
+	void Application::OnEvent(Event& event)
 	{
-		EventDispatcher dispatcher(e);
+		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); )
 		{
-			(*--it)->OnEvent(e);
-			if (e.Handled)
+			(*--it)->OnEvent(event);
+			if (event.is_handled)
 				break;
 		}
 	}
