@@ -81,23 +81,31 @@ namespace Swallow {
 				{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
+					KeyDownEvent event(key, 0);
 					data.event_callback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
+					KeyUpEvent event(key);
 					data.event_callback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, 1);
+					KeyDownEvent event(key, 1);
 					data.event_callback(event);
 					break;
 				}
 				}
+			});
+
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int key_code)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+				KeyTypedEvent event(key_code);
+				data.event_callback(event);
 			});
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
@@ -108,13 +116,13 @@ namespace Swallow {
 				{
 				case GLFW_PRESS:
 				{
-					MouseButtonPressedEvent event(button);
+					MouseButtonDownEvent event(button);
 					data.event_callback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					MouseButtonReleasedEvent event(button);
+					MouseButtonUpEvent event(button);
 					data.event_callback(event);
 					break;
 				}
@@ -129,11 +137,11 @@ namespace Swallow {
 				data.event_callback(event);
 			});
 
-		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
+		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double pos_x, double pos_y)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				MouseMovedEvent event((float)xPos, (float)yPos);
+				MouseMovedEvent event((float)pos_x, (float)pos_y);
 				data.event_callback(event);
 			});
 	}

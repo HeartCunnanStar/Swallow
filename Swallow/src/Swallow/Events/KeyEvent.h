@@ -18,10 +18,10 @@ namespace Swallow {
 		int m_key_code;
 	};
 
-	class SWALLOW_API KeyPressedEvent : public KeyEvent
+	class SWALLOW_API KeyDownEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keycode, int repeated_count)
+		KeyDownEvent(int keycode, int repeated_count)
 			: KeyEvent(keycode), m_repeated_count(repeated_count) {
 		}
 
@@ -30,29 +30,47 @@ namespace Swallow {
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_key_code << " (" << m_repeated_count << " repeats)";
+			ss << "KeyDownEvent: " << m_key_code << " (" << m_repeated_count << " repeats)";
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(KeyPressed)
+		EVENT_CLASS_TYPE(KeyDown)
 	private:
 		int m_repeated_count;
 	};
 
-	class SWALLOW_API KeyReleasedEvent : public KeyEvent
+	class SWALLOW_API KeyUpEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(int keycode)
+		KeyUpEvent(int keycode)
 			: KeyEvent(keycode) {
 		}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << m_key_code;
+			ss << "KeyUpEvent: " << m_key_code;
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(KeyReleased)
+		EVENT_CLASS_TYPE(KeyUp)
+	};
+	
+	class SWALLOW_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode) {
+		}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_key_code;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
 	};
 }
+

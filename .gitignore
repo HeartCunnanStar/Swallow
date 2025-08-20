@@ -3,5 +3,11 @@
 ################################################################################
 
 .vs/
-/bin/Debug-windows-x86_64
-/bin-int/Debug-windows-x86_64
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+**.csproj
+
+/bin/
+/bin-int/

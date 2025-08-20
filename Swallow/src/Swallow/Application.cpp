@@ -7,7 +7,8 @@
 
 namespace Swallow {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+//no more need after we have define SW_BIND_EVENT_FN in core.h
+//#define BIND_EVENT_FN(fn) std::bind(&Application::fn, this, std::placeholders::_1)
 
 	Application* Application::s_instance = nullptr;
 
@@ -17,7 +18,7 @@ namespace Swallow {
 		s_instance = this;
 
 		m_window = std::unique_ptr<Window>(Window::Create());
-		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
 	}
 
 	Application::~Application()
@@ -39,7 +40,7 @@ namespace Swallow {
 	void Application::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(SW_BIND_EVENT_FN(Application::OnWindowClose));
 
 		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); )
 		{
