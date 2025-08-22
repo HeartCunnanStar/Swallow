@@ -22,7 +22,7 @@ namespace Swallow {
 		void OnEvent(Event& event);
 
 		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* layer);
+		void PushOverlayer(Layer* layer);
 
 		inline Window& GetWindow() { return *m_window; }
 

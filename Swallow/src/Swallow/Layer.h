@@ -17,6 +17,7 @@ namespace Swallow {
 		virtual void OnEvent(Event& event) {}
 
 		inline const std::string& GetName() const { return m_debug_name; }
+
 	protected:
 		std::string m_debug_name;
 	};

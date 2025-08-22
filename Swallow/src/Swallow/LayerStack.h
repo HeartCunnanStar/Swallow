@@ -14,9 +14,9 @@ namespace Swallow {
 		~LayerStack();
 
 		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* overlay);
+		void PushOverlayer(Layer* overlayer);
 		void PopLayer(Layer* layer);
-		void PopOverlay(Layer* overlay);
+		void PopOverlayer(Layer* overlayer);
 
 		std::vector<Layer*>::iterator begin() { return m_layers.begin(); }
 		std::vector<Layer*>::iterator end() { return m_layers.end(); }

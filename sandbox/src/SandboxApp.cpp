@@ -9,11 +9,13 @@ public:
 
 	void OnUpdate() override
 	{
-		SW_INFO("ExampleLayer::Update");
+		// SW for DEBUG
+		//SW_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Swallow::Event& event) override
 	{
+		// SW for DEBUG
 		SW_TRACE("{0}", event.ToString());
 	}
 };

@@ -30,6 +30,7 @@ namespace Swallow {
 		bool OnKeyTypedEvent(KeyTypedEvent& event);
 
 		bool OnWindowResizeEvent(WindowResizeEvent& event);
+
 	private:
 		float m_time = 0.0f;
 	};

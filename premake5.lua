@@ -1,6 +1,8 @@
 workspace "Swallow"
 	architecture "x64"
 
+	startproject "sandbox"
+
 	configurations
 	{
 		"Debug",
@@ -84,17 +86,17 @@ project "Swallow"
 
 	filter "configurations:Debug"
 		defines "SW_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "SW_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 			
 	filter "configurations:Dist"
 		defines "SW_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 project "sandbox"
@@ -134,15 +136,15 @@ project "sandbox"
 
 	filter "configurations:Debug"
 		defines "SW_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "SW_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 			
 	filter "configurations:Dist"
 		defines "SW_DIST"
-		buildoptions "/MD"
+		runtime "Release"		
 		optimize "On"

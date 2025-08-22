@@ -22,6 +22,8 @@ namespace Swallow {
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 
+		virtual void* GetNativeWindow() const { return m_window; }
+
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

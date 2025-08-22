@@ -5,9 +5,11 @@
 
 #include <glad/glad.h>
 
+#include "Swallow/Input.h"
+
 namespace Swallow {
 
-//no more need after we have define SW_BIND_EVENT_FN in core.h
+//there is no more need after we have define SW_BIND_EVENT_FN in core.h
 //#define BIND_EVENT_FN(fn) std::bind(&Application::fn, this, std::placeholders::_1)
 
 	Application* Application::s_instance = nullptr;
@@ -31,9 +33,9 @@ namespace Swallow {
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer* layer)
+	void Application::PushOverlayer(Layer* layer)
 	{
-		m_layer_stack.PushOverlay(layer);
+		m_layer_stack.PushOverlayer(layer);
 		layer->OnAttach();
 	}
 
@@ -59,6 +61,9 @@ namespace Swallow {
 
 			for (Layer* layer : m_layer_stack)
 				layer->OnUpdate();
+
+			//auto [x, y] = Input::GetMousePos();
+			//SW_CORE_TRACE("{0}, {1}", x, y);
 
 			m_window->OnUpdate();
 		}

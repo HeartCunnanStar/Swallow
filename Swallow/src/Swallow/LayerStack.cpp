@@ -19,9 +19,9 @@ namespace Swallow {
 		m_layer_insert = m_layers.emplace(m_layer_insert, layer);
 	}
 
-	void LayerStack::PushOverlay(Layer* overlay)
+	void LayerStack::PushOverlayer(Layer* overlayer)
 	{
-		m_layers.emplace_back(overlay);
+		m_layers.emplace_back(overlayer);
 	}
 
 	void LayerStack::PopLayer(Layer* layer)
@@ -34,9 +34,9 @@ namespace Swallow {
 		}
 	}
 
-	void LayerStack::PopOverlay(Layer* overlay)
+	void LayerStack::PopOverlayer(Layer* overlayer)
 	{
-		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
+		auto it = std::find(m_layers.begin(), m_layers.end(), overlayer);
 		if (it != m_layers.end())
 			m_layers.erase(it);
 	}
