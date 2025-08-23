@@ -14,11 +14,11 @@ namespace Swallow {
 		ImGuiLayer();
 		~ImGuiLayer();
 
-		virtual void OnUpdate() override;
+		//virtual void OnUpdate() override;
+
 		virtual void OnDetach() override;
 		virtual void OnAttach() override;
-
-		virtual void OnImguiRender();
+		virtual void OnImGuiRender() override;
 
 		void Begin();
 		void End();

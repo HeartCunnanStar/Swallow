@@ -5,8 +5,8 @@
 #include "imgui.h"
 
 #define IMGUI_IMPL_API
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 #include "Swallow/Application.h"
 
@@ -31,9 +31,24 @@ namespace Swallow {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-		io.ConfigFlags |= ImGuiConfigFlags_
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		ImGui::StyleColorsDark();
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.f;
+		}
+		Application& app = Application::GetIns();
+		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init("#version 410");
 
 		// before 250823
 		//ImGui::CreateContext();
@@ -69,116 +84,151 @@ namespace Swallow {
 		//ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
-	void ImGuiLayer::OnDetach()
+	void ImGuiLayer::OnImGuiRender()
 	{
-
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 	}
 
-	void ImGuiLayer::OnUpdate()
+	void ImGuiLayer::OnDetach()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
+
+	void ImGuiLayer::Begin()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void ImGuiLayer::End()
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::GetIns();
 		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
-		float time = (float)glfwGetTime();
-		io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
-		m_time = time;
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui::NewFrame();
-
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
-
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
 	}
 
-	void ImGuiLayer::OnEvent(Event& event)
-	{
-		EventDispatcher dispather(event);
-		dispather.Dispatch<MouseButtonDownEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonDownEvent));
-		dispather.Dispatch<MouseButtonUpEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonUpEvent));
-		dispather.Dispatch<MouseMovedEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseMovedEvent));
-		dispather.Dispatch<MouseScrolledEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolledEvent));
-		dispather.Dispatch<KeyTypedEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
-		dispather.Dispatch<KeyDownEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnKeyDownEvent));
-		dispather.Dispatch<KeyUpEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnKeyUpEvent));
-		dispather.Dispatch<WindowResizeEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
-	}
+	//	 before 250823
+	//void ImGuiLayer::OnUpdate()
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	Application& app = Application::GetIns();
+	//	io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
-	bool ImGuiLayer::OnMouseButtonDownEvent(MouseButtonDownEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[event.GetMouseButton()] = true;
+	//	float time = (float)glfwGetTime();
+	//	io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
+	//	m_time = time;
 
-		return false;
-	}
+	//	ImGui_ImplOpenGL3_NewFrame();
+	//	ImGui::NewFrame();
 
-	bool ImGuiLayer::OnMouseButtonUpEvent(MouseButtonUpEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[event.GetMouseButton()] = false;
+	//	static bool show = true;
+	//	ImGui::ShowDemoWindow(&show);
 
-		return false;
-	}
+	//	ImGui::Render();
+	//	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	//}
 
-	bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseWheelH += event.GetXOffset();
-		io.MouseWheel += event.GetYOffset();
+	// before 250823
+	//void ImGuiLayer::OnEvent(Event& event)
+	//{
+	//	EventDispatcher dispather(event);
+	//	dispather.Dispatch<MouseButtonDownEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonDownEvent));
+	//	dispather.Dispatch<MouseButtonUpEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonUpEvent));
+	//	dispather.Dispatch<MouseMovedEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseMovedEvent));
+	//	dispather.Dispatch<MouseScrolledEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolledEvent));
+	//	dispather.Dispatch<KeyTypedEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
+	//	dispather.Dispatch<KeyDownEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnKeyDownEvent));
+	//	dispather.Dispatch<KeyUpEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnKeyUpEvent));
+	//	dispather.Dispatch<WindowResizeEvent>(SW_BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
+	//}
 
-		return false;
-	}
+	//bool ImGuiLayer::OnMouseButtonDownEvent(MouseButtonDownEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.MouseDown[event.GetMouseButton()] = true;
 
-	bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MousePos = ImVec2(event.GetX(), event.GetY());
+	//	return false;
+	//}
 
-		return false;
-	}
+	//bool ImGuiLayer::OnMouseButtonUpEvent(MouseButtonUpEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.MouseDown[event.GetMouseButton()] = false;
 
-	bool ImGuiLayer::OnKeyDownEvent(KeyDownEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.KeysDown[event.GetKeyCode()] = true;
+	//	return false;
+	//}
 
-		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+	//bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.MouseWheelH += event.GetXOffset();
+	//	io.MouseWheel += event.GetYOffset();
 
-		return false;
-	}
+	//	return false;
+	//}
 
-	bool ImGuiLayer::OnKeyUpEvent(KeyUpEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.KeysDown[event.GetKeyCode()] = false;
+	//bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.MousePos = ImVec2(event.GetX(), event.GetY());
 
-		return false;
-	}
+	//	return false;
+	//}
 
-	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		int key_code = event.GetKeyCode();
-		if (key_code > 0 && key_code < 0x10000)
-			io.AddInputCharacter((unsigned short)key_code);
+	//bool ImGuiLayer::OnKeyDownEvent(KeyDownEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.KeysDown[event.GetKeyCode()] = true;
 
-		return false;
-	}
+	//	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+	//	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+	//	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+	//	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 
-	bool ImGuiLayer::OnWindowResizeEvent(WindowResizeEvent& event)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(event.GetWidth(), event.GetHeight());
-		io.DisplayFramebufferScale = ImVec2(1.f, 1.f);
-		glViewport(0, 0, event.GetWidth(), event.GetHeight());
+	//	return false;
+	//}
 
-		return false;
-	}
+	//bool ImGuiLayer::OnKeyUpEvent(KeyUpEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.KeysDown[event.GetKeyCode()] = false;
+
+	//	return false;
+	//}
+
+	//bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	int key_code = event.GetKeyCode();
+	//	if (key_code > 0 && key_code < 0x10000)
+	//		io.AddInputCharacter((unsigned short)key_code);
+
+	//	return false;
+	//}
+
+	//bool ImGuiLayer::OnWindowResizeEvent(WindowResizeEvent& event)
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	io.DisplaySize = ImVec2(event.GetWidth(), event.GetHeight());
+	//	io.DisplayFramebufferScale = ImVec2(1.f, 1.f);
+	//	glViewport(0, 0, event.GetWidth(), event.GetHeight());
+
+	//	return false;
+	//}
 
 }

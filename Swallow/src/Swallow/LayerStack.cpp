@@ -5,7 +5,6 @@ namespace Swallow {
 
 	LayerStack::LayerStack()
 	{
-		m_layer_insert = m_layers.begin();
 	}
 
 	LayerStack::~LayerStack()
@@ -16,7 +15,8 @@ namespace Swallow {
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		m_layer_insert = m_layers.emplace(m_layer_insert, layer);
+		m_layers.emplace(m_layers.begin() + m_layer_insert_idx, layer);
+		++m_layer_insert_idx;
 	}
 
 	void LayerStack::PushOverlayer(Layer* overlayer)
@@ -30,7 +30,7 @@ namespace Swallow {
 		if (it != m_layers.end())
 		{
 			m_layers.erase(it);
-			m_layer_insert--;
+			--m_layer_insert_idx;
 		}
 	}
 

@@ -6,6 +6,7 @@
 #include "Swallow/LayerStack.h"
 #include "Swallow/Events/Event.h"
 #include "Swallow/Events/ApplicationEvent.h"
+#include "Swallow/ImGui/ImGuiLayer.h"
 
 #include <memory>
 
@@ -31,6 +32,7 @@ namespace Swallow {
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 
+		ImGuiLayer* m_imgui_layer;
 		std::unique_ptr<Window> m_window;
 		bool m_running = true;
 		LayerStack m_layer_stack;

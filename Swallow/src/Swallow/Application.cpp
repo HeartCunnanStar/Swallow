@@ -21,6 +21,9 @@ namespace Swallow {
 
 		m_window = std::unique_ptr<Window>(Window::Create());
 		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
+
+		m_imgui_layer = new ImGuiLayer;
+		PushOverlayer(m_imgui_layer);
 	}
 
 	Application::~Application()
@@ -62,6 +65,12 @@ namespace Swallow {
 			for (Layer* layer : m_layer_stack)
 				layer->OnUpdate();
 
+			m_imgui_layer->Begin();
+			for (Layer* layer : m_layer_stack)
+				layer->OnImGuiRender();
+			m_imgui_layer->End();
+
+			// for DEBUG
 			//auto [x, y] = Input::GetMousePos();
 			//SW_CORE_TRACE("{0}, {1}", x, y);
 

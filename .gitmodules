@@ -7,3 +7,6 @@
 [submodule "Swallow/third_party/imgui"]
 	path = Swallow/third_party/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Swallow/third_party/glm"]
+	path = Swallow/third_party/glm
+	url = git@github.com:g-truc/glm.git
