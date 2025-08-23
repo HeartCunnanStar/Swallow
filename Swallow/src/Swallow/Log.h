@@ -27,15 +27,15 @@ namespace Swallow {
 }
 
 // core log marcos
-#define SW_CORE_ERROR(...) ::Swallow::Log::GetCoreLogger()->error(__VA_ARGS__);
-#define SW_CORE_WARN(...)  ::Swallow::Log::GetCoreLogger()->warn(__VA_ARGS__);
-#define SW_CORE_INFO(...)  ::Swallow::Log::GetCoreLogger()->info(__VA_ARGS__);
-#define SW_CORE_TRACE(...) ::Swallow::Log::GetCoreLogger()->trace(__VA_ARGS__);
-#define SW_CORE_FATAL(...) ::Swallow::Log::GetCoreLogger()->fatal(__VA_ARGS__);
+#define SW_CORE_ERROR(...) ::Swallow::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define SW_CORE_WARN(...)  ::Swallow::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define SW_CORE_INFO(...)  ::Swallow::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define SW_CORE_TRACE(...) ::Swallow::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define SW_CORE_FATAL(...) ::Swallow::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
 // client log marcos
-#define SW_ERROR(...)	   ::Swallow::Log::GetClientLogger()->error(__VA_ARGS__);
-#define SW_WARN(...)	   ::Swallow::Log::GetClientLogger()->warn(__VA_ARGS__);
-#define SW_INFO(...)	   ::Swallow::Log::GetClientLogger()->info(__VA_ARGS__);
-#define SW_TRACE(...)	   ::Swallow::Log::GetClientLogger()->trace(__VA_ARGS__);
-#define SW_FATAL(...)	   ::Swallow::Log::GetClientLogger()->fatal(__VA_ARGS__);
+#define SW_ERROR(...)	   ::Swallow::Log::GetClientLogger()->error(__VA_ARGS__)
+#define SW_WARN(...)	   ::Swallow::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define SW_INFO(...)	   ::Swallow::Log::GetClientLogger()->info(__VA_ARGS__)
+#define SW_TRACE(...)	   ::Swallow::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define SW_FATAL(...)	   ::Swallow::Log::GetClientLogger()->fatal(__VA_ARGS__)
