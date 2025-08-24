@@ -41,7 +41,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushLayer(new Swallow::ImGuiLayer());
+		//PushLayer(new Swallow::ImGuiLayer());
 	}
 
 	~Sandbox()
