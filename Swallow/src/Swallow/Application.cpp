@@ -5,9 +5,12 @@
 
 #include <glad/glad.h>
 
+#include "Swallow/Input.h"
+
 namespace Swallow {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+//there is no more need after we have define SW_BIND_EVENT_FN in core.h
+//#define BIND_EVENT_FN(fn) std::bind(&Application::fn, this, std::placeholders::_1)
 
 	Application* Application::s_instance = nullptr;
 
@@ -17,7 +20,10 @@ namespace Swallow {
 		s_instance = this;
 
 		m_window = std::unique_ptr<Window>(Window::Create());
-		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
+
+		m_imgui_layer = new ImGuiLayer;
+		PushOverlayer(m_imgui_layer);
 	}
 
 	Application::~Application()
@@ -30,16 +36,16 @@ namespace Swallow {
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer* layer)
+	void Application::PushOverlayer(Layer* layer)
 	{
-		m_layer_stack.PushOverlay(layer);
+		m_layer_stack.PushOverlayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(SW_BIND_EVENT_FN(Application::OnWindowClose));
 
 		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); )
 		{
@@ -58,6 +64,15 @@ namespace Swallow {
 
 			for (Layer* layer : m_layer_stack)
 				layer->OnUpdate();
+
+			m_imgui_layer->Begin();
+			for (Layer* layer : m_layer_stack)
+				layer->OnImGuiRender();
+			m_imgui_layer->End();
+
+			// for DEBUG
+			//auto [x, y] = Input::GetMousePos();
+			//SW_CORE_TRACE("{0}, {1}", x, y);
 
 			m_window->OnUpdate();
 		}

@@ -64,38 +64,38 @@ namespace Swallow {
 		int m_button;
 	};
 
-	class SWALLOW_API MouseButtonPressedEvent : public MouseButtonEvent
+	class SWALLOW_API MouseButtonDownEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int button)
+		MouseButtonDownEvent(int button)
 			: MouseButtonEvent(button) {
 		}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseButtonPressedEvent: " << m_button;
+			ss << "MouseButtonDownEvent: " << m_button;
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MouseButtonPressed)
+		EVENT_CLASS_TYPE(MouseButtonDown)
 	};
 
-	class SWALLOW_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class SWALLOW_API MouseButtonUpEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int button)
+		MouseButtonUpEvent(int button)
 			: MouseButtonEvent(button) {
 		}
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseButtonReleasedEvent: " << m_button;
+			ss << "MouseButtonUpEvent: " << m_button;
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MouseButtonReleased)
+		EVENT_CLASS_TYPE(MouseButtonUp)
 	};
 
 }

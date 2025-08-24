@@ -18,8 +18,8 @@ namespace Swallow {
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+		KeyDown, KeyUp, KeyTyped,
+		MouseButtonDown, MouseButtonUp, MouseMoved, MouseScrolled
 	};
 
 	enum EventCategory
@@ -69,11 +69,14 @@ namespace Swallow {
 		{
 			if (m_event.GetEventType() == T::GetStaticType())
 			{
-				m_event.is_handled = func(*(T*)&m_event);
+				//m_event.is_handled = func( *(T*)&m_event );
+                m_event.is_handled = func(static_cast<T&>(m_event));
+
 				return true;
 			}
 			return false;
 		}
+
 	private:
 		Event& m_event;
 	};

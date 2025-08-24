@@ -1,6 +1,8 @@
 workspace "Swallow"
 	architecture "x64"
 
+	startproject "sandbox"
+
 	configurations
 	{
 		"Debug",
@@ -21,6 +23,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Swallow/third_party/GLFW/include"
 IncludeDir["Glad"] = "Swallow/third_party/Glad/include"
 IncludeDir["ImGui"] = "Swallow/third_party/imgui"
+IncludeDir["glm"] = "Swallow/third_party/glm"
 
 include "Swallow/third_party/GLFW"
 include "Swallow/third_party/Glad"
@@ -40,7 +43,10 @@ project "Swallow"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/third_party/glm/glm/**.hpp",
+		"%{prj.name}/third_party/glm/glm/**.inl"
+
 	}
 
 	includedirs
@@ -49,7 +55,8 @@ project "Swallow"
 		"%{prj.name}/third_party/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -84,17 +91,17 @@ project "Swallow"
 
 	filter "configurations:Debug"
 		defines "SW_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "SW_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 			
 	filter "configurations:Dist"
 		defines "SW_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 project "sandbox"
@@ -114,7 +121,8 @@ project "sandbox"
 	includedirs 
 	{
 		"Swallow/third_party/spdlog/include",
-		"Swallow/src"
+		"Swallow/src",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -134,15 +142,15 @@ project "sandbox"
 
 	filter "configurations:Debug"
 		defines "SW_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "SW_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 			
 	filter "configurations:Dist"
 		defines "SW_DIST"
-		buildoptions "/MD"
+		runtime "Release"		
 		optimize "On"

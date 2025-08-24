@@ -10,16 +10,20 @@
 	#error Swallow only for windows
 #endif
 
+//#ifndef SW_ENABLE_ASSERTS
+//	#define SW_ENABLE_ASSERTS
+//#endif
+
 #ifdef SW_ENABLE_ASSERTS
-	#define SW_ASSERT(x, ...) {								\
+	#define SW_ASSERT(x, ...) do {							\
 		if(!(x)) {											\	
 			SW_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
 			__debugbreak();									\
 		}													\
-	}														\
+	} while(0)
 	#define SW_CORE_ASSERT(x, ...) {						\
 		if(!(x)) {											\
-			SW_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__);\ 
+			SW_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__);\
 			__debugbreak();									\
 		}													\
 	}		
@@ -29,3 +33,5 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+#define SW_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
