@@ -14,26 +14,28 @@
 	#error Swallow only for windows
 #endif
 
-//#ifndef SW_ENABLE_ASSERTS
-//	#define SW_ENABLE_ASSERTS
-//#endif
+#ifndef SW_ENABLE_ASSERTS
+	#define SW_ENABLE_ASSERTS
+#endif
+
+// notice that in define sentences : there shouldn't be any space after "\" 
 
 #ifdef SW_ENABLE_ASSERTS
-	#define SW_ASSERT(x, ...) do {							\
-		if(!(x)) {											\	
+#define SW_ASSERT(x, ...) do {							    \
+		if(!(x)) {											\
 			SW_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
 			__debugbreak();									\
 		}													\
-	} while(0)
-	#define SW_CORE_ASSERT(x, ...) {						\
+	} while (0)
+#define SW_CORE_ASSERT(x, ...) do {					        \
 		if(!(x)) {											\
-			SW_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__);\
+			SW_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
 			__debugbreak();									\
 		}													\
-	}		
+	} while (0)
 #else
-	#define SW_ASSERT(x, ...)
-	#define SW_CORE_ASSERT(x, ...)
+#define SW_ASSERT(x, ...)
+#define SW_CORE_ASSERT(x, ...)
 #endif
 
 #define BIT(x) (1 << x)

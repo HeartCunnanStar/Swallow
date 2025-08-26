@@ -8,6 +8,9 @@
 #include "Swallow/Events/ApplicationEvent.h"
 #include "Swallow/ImGui/ImGuiLayer.h"
 
+// FOR DEBUG
+#include "Swallow/Renderer/Shader.h"
+
 #include <memory>
 
 namespace Swallow {
@@ -36,6 +39,13 @@ namespace Swallow {
 		std::unique_ptr<Window> m_window;
 		bool m_running = true;
 		LayerStack m_layer_stack;
+
+		unsigned int m_vertex_array;
+		unsigned int m_vertex_buffer;
+		unsigned int m_index_buffer;
+
+		// FOR DEBUG
+		std::unique_ptr<Shader> m_shader;
 
 		static Application* s_instance;
 	};
