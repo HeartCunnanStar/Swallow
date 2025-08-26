@@ -5,7 +5,7 @@
 #include "Swallow/Events/MouseEvent.h"
 #include "Swallow/Events/KeyEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Swallow {
 
@@ -49,9 +49,10 @@ namespace Swallow {
 		}
 
 		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		SW_CORE_ASSERT(status, "Failed to initialize Glad!");
+
+		m_context = new OpenGLContext(m_window);
+		m_context->Init();
+
 		glfwSetWindowUserPointer(m_window, &m_data);
 		SetVSync(true);
 
@@ -154,7 +155,7 @@ namespace Swallow {
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_window);
+		m_context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

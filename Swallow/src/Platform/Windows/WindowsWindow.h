@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Swallow/Window.h"
+#include "Swallow/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -30,6 +31,7 @@ namespace Swallow {
 
 	private:
 		GLFWwindow* m_window;
+		GraphicsContext* m_context;
 
 		struct WindowData
 		{

@@ -31,8 +31,10 @@ include "Swallow/third_party/imgui"
 
 project "Swallow"
 	location "Swallow"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -69,8 +71,6 @@ project "Swallow"
 
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "Off" -- in course it is "On"
 		systemversion "latest"
 
 		defines
@@ -81,33 +81,35 @@ project "Swallow"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			--("{MKDIR} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/sandbox"),
-			("{MKDIR} \"../bin/" .. outputdir .. "/sandbox\""),
+		-- postbuildcommands
+		-- {
+		-- 	--("{MKDIR} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/sandbox"),
+		-- 	("{MKDIR} \"../bin/" .. outputdir .. "/sandbox\""),
 
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/sandbox")
-		}
+		-- 	("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/sandbox")
+		-- }
 
 	filter "configurations:Debug"
 		defines "SW_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "SW_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 			
 	filter "configurations:Dist"
 		defines "SW_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 project "sandbox"
 	location "sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -131,8 +133,6 @@ project "sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "Off"  -- in course it is "On"
 		systemversion "latest"
 
 		defines
@@ -143,14 +143,14 @@ project "sandbox"
 	filter "configurations:Debug"
 		defines "SW_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "SW_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 			
 	filter "configurations:Dist"
 		defines "SW_DIST"
 		runtime "Release"		
-		optimize "On"
+		optimize "on"

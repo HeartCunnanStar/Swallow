@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef SW_PLATFORMS_WINDOWS
-	#if defined(SW_BUILD_DLL)
-		#define SWALLOW_API __declspec(dllexport)
-	#else
-		#define SWALLOW_API __declspec(dllimport)
+	#ifdef SW_DYNAMIC_LINK
+		#if defined(SW_BUILD_DLL)
+			#define SWALLOW_API __declspec(dllexport)
+		#else
+			#define SWALLOW_API __declspec(dllimport)
+		#endif
+	#else 
+		#define SWALLOW_API
 	#endif
 #else
 	#error Swallow only for windows
