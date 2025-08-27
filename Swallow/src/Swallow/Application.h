@@ -10,6 +10,7 @@
 
 // FOR DEBUG
 #include "Swallow/Renderer/Shader.h"
+#include "Swallow/Renderer/Buffer.h"
 
 #include <memory>
 
@@ -41,8 +42,8 @@ namespace Swallow {
 		LayerStack m_layer_stack;
 
 		unsigned int m_vertex_array;
-		unsigned int m_vertex_buffer;
-		unsigned int m_index_buffer;
+		std::unique_ptr<VertexBuffer> m_vertex_buffer;
+		std::unique_ptr<IndexBuffer> m_index_buffer;
 
 		// FOR DEBUG
 		std::unique_ptr<Shader> m_shader;

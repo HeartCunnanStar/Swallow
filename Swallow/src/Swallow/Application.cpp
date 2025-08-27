@@ -14,6 +14,28 @@ namespace Swallow {
 
 	Application* Application::s_instance = nullptr;
 
+	static GLenum ShaderDataType2OpenGLType(ShaderDataType type)
+	{
+		using SD = ShaderDataType;
+		switch (type)
+		{
+		case SD::Bool:		return GL_BOOL;
+		case SD::Float:
+		case SD::Float2:
+		case SD::Float3:
+		case SD::Float4:	return GL_FLOAT;
+		case SD::Int:		
+		case SD::Int2:		
+		case SD::Int3:		
+		case SD::Int4:		return GL_INT;
+		case SD::Mat3:
+		case SD::Mat4:		return GL_FLOAT;
+		}
+
+		SW_CORE_ASSERT(false, "Unknow ShaderDataType!");
+		return 0;
+	}
+
 	Application::Application()
 	{
 		SW_CORE_ASSERT(!s_instance, "Application instance already had one");
@@ -28,33 +50,39 @@ namespace Swallow {
 		glGenVertexArrays(1, &m_vertex_array);
 		glBindVertexArray(m_vertex_array);
 
-		glGenBuffers(1, &m_vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
-
 		// for DEBUG
 		float vertices[3 * 3] = {
 			-0.5f, -0.5f, 0.0f,
 			 0.5f, -0.5f, 0.0f,
 			 0.0f,  0.5f, 0.0f
 		};
+		m_vertex_buffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
-
-		glGenBuffers(1, &m_index_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
+		BufferLayout layout = {
+			{ ShaderDataType::Float3, "a_Position" }
+		};
+		
+		uint32_t index = 0;
+		for (const auto& ele : layout)
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, ele.GetComponentCount(), 
+				ShaderDataType2OpenGLType(ele.type), 
+				ele.is_normalized ? GL_TRUE : GL_TRUE,
+				layout.GetStride(), 
+				reinterpret_cast<const void*>(ele.offset));
+			++index;
+		}
 
 		unsigned int indicies[3] = { 0, 1, 2 };
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
+		m_index_buffer.reset(IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t)));
 
 		std::string vertex_src = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
 
-			out vec3 v_Position;
+			out vec3 v_Position;  
 
 			void main()
 			{
@@ -112,13 +140,13 @@ namespace Swallow {
 	{
 		while (m_running)
 		{
-			glClearColor(0.1, 0.1, 0.1, 1);
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_shader->Bind();
 
 			glBindVertexArray(m_vertex_array);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_index_buffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			for (Layer* layer : m_layer_stack)
 				layer->OnUpdate();
