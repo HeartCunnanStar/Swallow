@@ -72,6 +72,8 @@ namespace Swallow {
 		// supports range-for 
 		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
+		std::vector<BufferElement>::const_iterator begin() const { return m_elements.begin(); } // begin()/end() will return const or normal iterator according to case
+		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); }
 
 	private:
 		void CalculateOffsetAndStride();
@@ -89,7 +91,7 @@ namespace Swallow {
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual void SetLayOut(const BufferLayout& layout) = 0;
+		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
 		static VertexBuffer* Create(float* vertices, uint32_t size);

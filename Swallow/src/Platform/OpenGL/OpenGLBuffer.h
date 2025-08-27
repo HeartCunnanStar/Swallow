@@ -13,7 +13,7 @@ namespace Swallow {
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
-		virtual void SetLayOut(const BufferLayout& layout) override { m_layout = layout; }
+		virtual void SetLayout(const BufferLayout& layout) override { m_layout = layout; }
 		virtual const BufferLayout& GetLayout() const override {return m_layout; }
 
 	private:

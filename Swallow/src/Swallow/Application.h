@@ -11,6 +11,7 @@
 // FOR DEBUG
 #include "Swallow/Renderer/Shader.h"
 #include "Swallow/Renderer/Buffer.h"
+#include "Swallow/Renderer/VertexArray.h"
 
 #include <memory>
 
@@ -41,12 +42,10 @@ namespace Swallow {
 		bool m_running = true;
 		LayerStack m_layer_stack;
 
-		unsigned int m_vertex_array;
-		std::unique_ptr<VertexBuffer> m_vertex_buffer;
-		std::unique_ptr<IndexBuffer> m_index_buffer;
-
-		// FOR DEBUG
-		std::unique_ptr<Shader> m_shader;
+		std::shared_ptr<VertexArray> m_vertex_array;		
+		std::shared_ptr<VertexBuffer> m_vertex_buffer;
+		std::shared_ptr<IndexBuffer> m_index_buffer;
+		std::shared_ptr<Shader> m_shader;
 
 		static Application* s_instance;
 	};
