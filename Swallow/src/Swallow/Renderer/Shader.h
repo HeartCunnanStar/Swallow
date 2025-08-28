@@ -6,7 +6,7 @@
 
 namespace Swallow {
 
-	class Shader
+	class SWALLOW_API Shader
 	{
 	public:
 		Shader(const std::string& vertex_src, const std::string& fragment_src);

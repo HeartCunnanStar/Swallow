@@ -6,7 +6,7 @@
 
 namespace Swallow {
 
-	class VertexArray
+	class SWALLOW_API VertexArray
 	{
 	public:
 		virtual ~VertexArray() = default;

@@ -8,12 +8,6 @@
 #include "Swallow/Events/ApplicationEvent.h"
 #include "Swallow/ImGui/ImGuiLayer.h"
 
-#include "Swallow/Renderer/OrthographicCamera.h"
-// FOR DEBUG
-#include "Swallow/Renderer/Shader.h"
-#include "Swallow/Renderer/Buffer.h"
-#include "Swallow/Renderer/VertexArray.h"
-
 #include <memory>
 
 namespace Swallow {
@@ -43,17 +37,7 @@ namespace Swallow {
 		bool m_running = true;
 		LayerStack m_layer_stack;
 
-		std::shared_ptr<VertexArray> m_vertex_array;		
-		std::shared_ptr<Shader> m_shader;
-
-		// for DEBUG : square
-		std::shared_ptr<Shader> m_shader2;
-		std::shared_ptr<VertexArray> m_squareVA;
-
-		OrthographicCamera m_camera;
-
 		static Application* s_instance;
-
 	};
 
 	// to be defined in CLIENT

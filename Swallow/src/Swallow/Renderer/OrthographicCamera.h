@@ -4,7 +4,7 @@
 
 namespace Swallow {
 
-	class OrthographicCamera
+	class SWALLOW_API OrthographicCamera
 	{
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);

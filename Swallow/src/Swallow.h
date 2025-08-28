@@ -12,6 +12,17 @@
 
 #include "Swallow/ImGui/ImGuiLayer.h"
 
+// ----------Renderer--------------
+#include "Swallow/Renderer/Buffer.h"
+#include "Swallow/Renderer/Shader.h"
+#include "Swallow/Renderer/VertexArray.h"
+
+#include "Swallow/Renderer/RenderCommand.h"
+#include "Swallow/Renderer/Renderer.h"
+
+#include "Swallow/Renderer/OrthographicCamera.h"
+// ---------------------------------
+
 // ----------Entry Point------------
 #include "Swallow/EntryPoint.h"
 // ---------------------------------
