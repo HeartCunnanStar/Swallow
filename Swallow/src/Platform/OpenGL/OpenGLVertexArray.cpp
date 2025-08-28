@@ -32,6 +32,11 @@ namespace Swallow {
 		glCreateVertexArrays(1, &m_rendererID);
 	}
 
+	OpenGLVertexArray::~OpenGLVertexArray()
+	{
+		glDeleteVertexArrays(1, &m_rendererID);
+	}
+
 	void OpenGLVertexArray::Bind() const
 	{
 		glBindVertexArray(m_rendererID);

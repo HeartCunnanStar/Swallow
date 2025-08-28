@@ -33,20 +33,47 @@ namespace Swallow {
 			 0.5f, -0.5f, 0.0f,	0.1f, 0.2f, 1.0f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.1f, 1.0f
 		};
-		m_vertex_buffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		std::shared_ptr<VertexBuffer> vertex_buffer;
+		vertex_buffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float4, "a_Color" }
 		};
 		 
-		m_vertex_buffer->SetLayout(layout);
-		m_vertex_array->AddVertexBuffer(m_vertex_buffer);
+		vertex_buffer->SetLayout(layout);
+		m_vertex_array->AddVertexBuffer(vertex_buffer);
 
-		unsigned int indicies[3] = { 0, 1, 2 };
-		m_index_buffer.reset(IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t)));
-		m_vertex_array->SetIndexBuffer(m_index_buffer);
-		 
+		unsigned int indicies[3] = { 0, 1, 2 };		
+		std::shared_ptr<IndexBuffer> index_buffer;
+		index_buffer.reset(IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t)));
+		m_vertex_array->SetIndexBuffer(index_buffer);
+
+		// -----try to draw a square---------------
+		m_squareVA.reset(VertexArray::Create());
+		float sqaure_vertices[3 * 4] = {
+		   -0.75f, -0.75f, 0.0f,
+			0.75f, -0.75f, 0.0f,
+			0.75f,  0.75f, 0.0f,
+		   -0.75f,  0.75f, 0.0f,
+		};
+
+		std::shared_ptr<VertexBuffer> squareVB;
+		squareVB.reset(VertexBuffer::Create(sqaure_vertices, sizeof(sqaure_vertices)));
+
+		BufferLayout square_layout = {
+			{ ShaderDataType::Float3, "a_Position" }		
+		};
+
+		squareVB->SetLayout(square_layout);
+		m_squareVA->AddVertexBuffer(squareVB);
+
+		unsigned int square_indicies[6] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<IndexBuffer> squareIB;
+		squareIB.reset(IndexBuffer::Create(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
+		m_squareVA->SetIndexBuffer(squareIB);
+
+		// -----------write shaders-------------------
 		std::string vertex_src = R"(
 			#version 330 core
 			
@@ -79,7 +106,35 @@ namespace Swallow {
 			}	
 		)";
 
+		std::string square_vertex_src = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+
+			out vec3 v_Position;
+
+			void main()
+			{
+				v_Position = a_Position;
+				gl_Position = vec4(a_Position, 1.0);
+			}	
+		)";
+
+		std::string square_fragment_src = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			in vec3 v_Position;
+
+			void main()
+			{
+				color = vec4(v_Position * 0.5 + 0.5, 1.0);
+			}	
+		)";
+
 		m_shader.reset(new Shader(vertex_src, fragment_src));
+		m_shader2.reset(new Shader(square_vertex_src, square_fragment_src));
 	}
 
 	Application::~Application()
@@ -118,10 +173,13 @@ namespace Swallow {
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			m_shader2->Bind();
+			m_squareVA->Bind();
+			glDrawElements(GL_TRIANGLES, m_squareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+
 			m_shader->Bind();
 			m_vertex_array->Bind();
-
-			glDrawElements(GL_TRIANGLES, m_index_buffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_vertex_array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			for (Layer* layer : m_layer_stack)
 				layer->OnUpdate();

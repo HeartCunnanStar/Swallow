@@ -43,9 +43,11 @@ namespace Swallow {
 		LayerStack m_layer_stack;
 
 		std::shared_ptr<VertexArray> m_vertex_array;		
-		std::shared_ptr<VertexBuffer> m_vertex_buffer;
-		std::shared_ptr<IndexBuffer> m_index_buffer;
 		std::shared_ptr<Shader> m_shader;
+
+		// for DEBUG : square
+		std::shared_ptr<Shader> m_shader2;
+		std::shared_ptr<VertexArray> m_squareVA;
 
 		static Application* s_instance;
 	};
