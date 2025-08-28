@@ -4,7 +4,6 @@
 
 #include <memory>
 
-
 namespace Swallow {
 
 	class VertexArray

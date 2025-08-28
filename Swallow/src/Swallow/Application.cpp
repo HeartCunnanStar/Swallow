@@ -3,7 +3,8 @@
 
 #include "Swallow/Log.h"
 
-#include <glad/glad.h>
+#include "Swallow/Renderer/Renderer.h"
+#include "Swallow/Renderer/RenderCommand.h"
 
 #include "Swallow/Input.h"
 
@@ -14,7 +15,7 @@ namespace Swallow {
 
 	Application* Application::s_instance = nullptr;
 
-	Application::Application()
+	Application::Application() : m_camera({-1.6f, 1.6f, -0.9f, 0.9f})
 	{
 		SW_CORE_ASSERT(!s_instance, "Application instance already had one");
 		s_instance = this;
@@ -31,7 +32,7 @@ namespace Swallow {
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.9f, 0.1f, 1.0f, 1.0f,
 			 0.5f, -0.5f, 0.0f,	0.1f, 0.2f, 1.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.1f, 1.0f
+			 0.0f,  0.366f, 0.0f, 1.0f, 1.0f, 0.1f, 1.0f
 		};
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		vertex_buffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
@@ -80,6 +81,8 @@ namespace Swallow {
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 
@@ -87,7 +90,7 @@ namespace Swallow {
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}	
 		)";
 
@@ -111,12 +114,14 @@ namespace Swallow {
 			
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}	
 		)";
 
@@ -170,16 +175,18 @@ namespace Swallow {
 	{
 		while (m_running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			RenderCommand::Clear();
+			
+			m_camera.SetPosition({ 0.5f, 0.5f, 0.0f });
+			m_camera.SetRotation(45.0f);
+			 
+			Renderer::BeginScene(m_camera);
 
-			m_shader2->Bind();
-			m_squareVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_squareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_squareVA, m_shader2);
+			Renderer::Submit(m_vertex_array, m_shader);
 
-			m_shader->Bind();
-			m_vertex_array->Bind();
-			glDrawElements(GL_TRIANGLES, m_vertex_array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::EndScene();
 
 			for (Layer* layer : m_layer_stack)
 				layer->OnUpdate();

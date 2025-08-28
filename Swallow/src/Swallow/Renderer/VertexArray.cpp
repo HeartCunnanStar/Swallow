@@ -10,8 +10,8 @@ namespace Swallow {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::OpenGL:	return new OpenGLVertexArray(); break;
-		case RendererAPI::None:		SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
+		case RendererAPI::API::OpenGL:	return new OpenGLVertexArray(); break;
+		case RendererAPI::API::None:	SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
 		SW_CORE_ASSERT(false, "Unknown choosen API!");

@@ -8,6 +8,7 @@
 #include "Swallow/Events/ApplicationEvent.h"
 #include "Swallow/ImGui/ImGuiLayer.h"
 
+#include "Swallow/Renderer/OrthographicCamera.h"
 // FOR DEBUG
 #include "Swallow/Renderer/Shader.h"
 #include "Swallow/Renderer/Buffer.h"
@@ -49,7 +50,10 @@ namespace Swallow {
 		std::shared_ptr<Shader> m_shader2;
 		std::shared_ptr<VertexArray> m_squareVA;
 
+		OrthographicCamera m_camera;
+
 		static Application* s_instance;
+
 	};
 
 	// to be defined in CLIENT

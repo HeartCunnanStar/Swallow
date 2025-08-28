@@ -32,8 +32,8 @@ namespace Swallow {
 	{
 		switch (Renderer::GetAPI())
 		{		
-		case RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size); break;
-		case RendererAPI::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
+		case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size); break;
+		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
 		SW_CORE_ASSERT(false, "Unknown choosen API!");
@@ -44,8 +44,8 @@ namespace Swallow {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, count); break;
-		case RendererAPI::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
+		case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, count); break;
+		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
 		SW_CORE_ASSERT(false, "Unknown choosen API!");
