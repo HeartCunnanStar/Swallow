@@ -28,7 +28,7 @@ namespace Swallow {
 	//	return 0;
 	//}
 
-	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
+	VertexBuffer* VertexBuffer::CreateIns(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{		
@@ -36,11 +36,11 @@ namespace Swallow {
 		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
-		SW_CORE_ASSERT(false, "Unknown choosen API!");
+		SW_CORE_ASSERT(false, "Unknown chosen API!");
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
+	IndexBuffer* IndexBuffer::CreateIns(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -48,7 +48,7 @@ namespace Swallow {
 		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
-		SW_CORE_ASSERT(false, "Unknown choosen API!");
+		SW_CORE_ASSERT(false, "Unknown chosen API!");
 		return nullptr;
 	}
 

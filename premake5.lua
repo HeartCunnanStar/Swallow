@@ -123,6 +123,7 @@ project "sandbox"
 	includedirs 
 	{
 		"Swallow/third_party/spdlog/include",
+		"Swallow/third_party/imgui",
 		"Swallow/src",
 		"%{IncludeDir.glm}"
 	}

@@ -2,22 +2,17 @@
 
 #include <string>
 
-#include "glm/glm.hpp"
-
 namespace Swallow {
 
 	class SWALLOW_API Shader
 	{
 	public:
-		Shader(const std::string& vertex_src, const std::string& fragment_src);
-		~Shader();
+		Shader() = default;
+		virtual ~Shader() = default;
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		void UploadUniformMat4(const std::string& name, const glm::mat4 matrix);
-
-	private:
-		uint32_t m_rendererID = 0;
+		static Shader* CreateIns(const std::string& vertex_src, const std::string& fragment_src);
 	};
 }

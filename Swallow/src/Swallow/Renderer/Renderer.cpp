@@ -2,6 +2,7 @@
 #include "Renderer.h"
 
 #include "RenderCommand.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Swallow
 {
@@ -16,10 +17,12 @@ namespace Swallow
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertex_array, const std::shared_ptr<Shader>& shader)
+	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertex_array, const std::shared_ptr<Shader>& shader, const glm::mat4& transform)
 	{
 		shader->Bind();
-		shader->UploadUniformMat4("u_ViewProjection", m_scene_data->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_scene_data->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
+
 		vertex_array->Bind();
 		RenderCommand::DrawIndexed(vertex_array);
 	}

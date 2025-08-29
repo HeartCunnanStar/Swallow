@@ -16,7 +16,7 @@ namespace Swallow {
 		SW_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window* Window::Create(const WindowProps& props)
+	Window* Window::CreateIns(const WindowProps& props)
 	{
 		return new WindowsWindow(props);
 	}

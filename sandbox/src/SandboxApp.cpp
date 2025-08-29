@@ -1,11 +1,18 @@
 #include <Swallow.h>
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
+
 class ExampleLayer : public Swallow::Layer
 {
 public:
-	ExampleLayer() : Layer("Layer"), m_camera({ -1.6f, 1.6f, -0.9f, 0.9f }), m_camera_position(0.0f)
+	ExampleLayer() : Layer("Layer"), m_camera({ -1.6f, 1.6f, -0.9f, 0.9f }), m_camera_position(0.0f),
+		m_square_position(0.0f)
 	{
-		m_vertex_array.reset(Swallow::VertexArray::Create());
+		m_vertex_array.reset(Swallow::VertexArray::CreateIns());
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.9f, 0.1f, 1.0f, 1.0f,
@@ -13,7 +20,7 @@ public:
 			 0.0f,  0.366f, 0.0f, 1.0f, 1.0f, 0.1f, 1.0f
 		};
 		std::shared_ptr<Swallow::VertexBuffer> vertex_buffer;
-		vertex_buffer.reset(Swallow::VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertex_buffer.reset(Swallow::VertexBuffer::CreateIns(vertices, sizeof(vertices)));
 
 		Swallow::BufferLayout layout = {
 			{ Swallow::ShaderDataType::Float3, "a_Position" },
@@ -25,11 +32,11 @@ public:
 
 		unsigned int indicies[3] = { 0, 1, 2 };
 		std::shared_ptr<Swallow::IndexBuffer> index_buffer;
-		index_buffer.reset(Swallow::IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t)));
+		index_buffer.reset(Swallow::IndexBuffer::CreateIns(indicies, sizeof(indicies) / sizeof(uint32_t)));
 		m_vertex_array->SetIndexBuffer(index_buffer);
 
 		// -----try to draw a square---------------
-		m_squareVA.reset(Swallow::VertexArray::Create());
+		m_squareVA.reset(Swallow::VertexArray::CreateIns());
 		float sqaure_vertices[3 * 4] = {
 		   -0.75f, -0.75f, 0.0f,
 			0.75f, -0.75f, 0.0f,
@@ -38,7 +45,7 @@ public:
 		};
 
 		std::shared_ptr<Swallow::VertexBuffer> squareVB;
-		squareVB.reset(Swallow::VertexBuffer::Create(sqaure_vertices, sizeof(sqaure_vertices)));
+		squareVB.reset(Swallow::VertexBuffer::CreateIns(sqaure_vertices, sizeof(sqaure_vertices)));
 
 		Swallow::BufferLayout square_layout = {
 			{ Swallow::ShaderDataType::Float3, "a_Position" }
@@ -49,7 +56,7 @@ public:
 
 		unsigned int square_indicies[6] = { 0, 1, 2, 2, 3, 0 };
 		std::shared_ptr<Swallow::IndexBuffer> squareIB;
-		squareIB.reset(Swallow::IndexBuffer::Create(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
+		squareIB.reset(Swallow::IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
 		m_squareVA->SetIndexBuffer(squareIB);
 
 		// -----------write shaders-------------------
@@ -60,6 +67,7 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 			out vec4 v_Color;
@@ -68,7 +76,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}	
 		)";
 
@@ -93,13 +101,14 @@ public:
 			layout(location = 0) in vec3 a_Position;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}	
 		)";
 
@@ -110,14 +119,16 @@ public:
 
 			in vec3 v_Position;
 
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(v_Position * 0.5 + 0.5, 1.0);
+				color = vec4(u_Color, 1.0);
 			}	
 		)";
 
-		m_shader.reset(new Swallow::Shader(vertex_src, fragment_src));
-		m_shader2.reset(new Swallow::Shader(square_vertex_src, square_fragment_src));
+		m_shader.reset(Swallow::Shader::CreateIns(vertex_src, fragment_src));
+		m_shader2.reset(Swallow::Shader::CreateIns(square_vertex_src, square_fragment_src));
 	}
 
 	void OnUpdate(Swallow::TimeStep time_step) override
@@ -145,7 +156,20 @@ public:
 
 		Swallow::Renderer::BeginScene(m_camera);
 
-		Swallow::Renderer::Submit(m_squareVA, m_shader2);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.06f));
+
+		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader2)->Bind();
+		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader2)->UploadUniformFloat3("u_Color", m_square_color);
+
+		for (int y = 0; y < 20; ++y)
+			for (int x = 0; x < 20; ++x)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Swallow::Renderer::Submit(m_squareVA, m_shader2, transform);
+			}
+		
+
 		Swallow::Renderer::Submit(m_vertex_array, m_shader);
 
 		Swallow::Renderer::EndScene();
@@ -155,6 +179,13 @@ public:
 		// SW for DEBUG
 		//if (Swallow::Input::IsKeyDown(SW_KEY_TAB))
 		//	SW_TRACE("Key TAB is down (poll)");
+	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Sqaure color", glm::value_ptr(m_square_color));
+		ImGui::End();
 	}
 
 	void OnEvent(Swallow::Event& event)  override
@@ -189,6 +220,9 @@ private:
 
 	float m_camera_rotation_speed = 10.0f;
 	float m_camera_rotation = 0.0f;
+
+	glm::vec3 m_square_position;
+	glm::vec3 m_square_color = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public Swallow::Application

@@ -6,7 +6,7 @@
 
 namespace Swallow {
 
-	VertexArray* VertexArray::Create()
+	VertexArray* VertexArray::CreateIns()
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -14,7 +14,7 @@ namespace Swallow {
 		case RendererAPI::API::None:	SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
-		SW_CORE_ASSERT(false, "Unknown choosen API!");
+		SW_CORE_ASSERT(false, "Unknown chosen API!");
 		return nullptr;
 	}
 }

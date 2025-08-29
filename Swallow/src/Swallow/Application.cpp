@@ -22,7 +22,7 @@ namespace Swallow {
 		SW_CORE_ASSERT(!s_instance, "Application instance already had one");
 		s_instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::Create());
+		m_window = std::unique_ptr<Window>(Window::CreateIns());
 		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
 		m_window->SetVSync(false);
 

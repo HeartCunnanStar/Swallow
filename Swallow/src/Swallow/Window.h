@@ -42,7 +42,7 @@ namespace Swallow {
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Window* Create(const WindowProps& props = WindowProps());
+		static Window* CreateIns(const WindowProps& props = WindowProps());
 	};
 
 }
