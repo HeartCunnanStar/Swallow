@@ -16,12 +16,12 @@ namespace Swallow {
 
 		static void Init();
 
-		inline static std::shared_ptr <spdlog::logger>& GetCoreLogger() { return s_core_logger; }
-		inline static std::shared_ptr <spdlog::logger>& GetClientLogger() { return s_client_logger; }
+		inline static Ref <spdlog::logger>& GetCoreLogger() { return s_core_logger; }
+		inline static Ref <spdlog::logger>& GetClientLogger() { return s_client_logger; }
 
 	private:
-		static std::shared_ptr<spdlog::logger> s_core_logger;
-		static std::shared_ptr<spdlog::logger> s_client_logger;
+		static Ref<spdlog::logger> s_core_logger;
+		static Ref<spdlog::logger> s_client_logger;
 	};
 
 }

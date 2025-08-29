@@ -5,8 +5,8 @@
 
 namespace Swallow{
 
-	std::shared_ptr<spdlog::logger> Log::s_core_logger = nullptr;
-	std::shared_ptr<spdlog::logger> Log::s_client_logger = nullptr;
+	Ref<spdlog::logger> Log::s_core_logger = nullptr;
+	Ref<spdlog::logger> Log::s_client_logger = nullptr;
 
 	void Log::Init()
 	{

@@ -10,6 +10,6 @@ namespace Swallow {
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
 
-		virtual void DrawIndexd(const std::shared_ptr<VertexArray>& vertex_array) override;
+		virtual void DrawIndexd(const Ref<VertexArray>& vertex_array) override;
 	};
 }

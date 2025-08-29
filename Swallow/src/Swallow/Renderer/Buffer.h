@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Swallow/Core.h"
-#include "Swallow/Log.h"
+#include "Swallow/Core/Core.h"
+#include "Swallow/Core/Log.h"
 
 #include <stdint.h>
 

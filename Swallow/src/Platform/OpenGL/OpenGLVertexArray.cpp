@@ -47,7 +47,7 @@ namespace Swallow {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertex_buffer)
+	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertex_buffer)
 	{
 		glBindVertexArray(m_rendererID);
 		vertex_buffer->Bind();
@@ -69,7 +69,7 @@ namespace Swallow {
 		m_vertex_buffers.push_back(vertex_buffer);
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& index_buffer)
+	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& index_buffer)
 	{
 		glBindVertexArray(m_rendererID);
 		index_buffer->Bind();

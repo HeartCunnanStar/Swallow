@@ -1,12 +1,12 @@
 #include "swpch.h"
 #include "Application.h"
 
-#include "Swallow/Log.h"
+#include "Swallow/Core/Log.h"
 
 #include "Swallow/Renderer/Renderer.h"
 #include "Swallow/Renderer/RenderCommand.h"
 
-#include "Swallow/Input.h"
+#include "Swallow/Core/Input.h"
 
 #include <GLFW/glfw3.h>
 

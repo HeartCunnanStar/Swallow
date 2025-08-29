@@ -2,15 +2,15 @@
 
 // only for applying
 
-#include "Swallow/Application.h"
-#include "Swallow/Layer.h"
-#include "Swallow/Log.h"
+#include "Swallow/Core/Application.h"
+#include "Swallow/Core/Layer.h"
+#include "Swallow/Core/Log.h"
 
 #include "Swallow/Core/TimeStep.h"
 
-#include "Swallow/Input.h"
-#include "Swallow/KeyCodes.h"
-#include "Swallow/MouseButtonCodes.h"
+#include "Swallow/Core/Input.h"
+#include "Swallow/Core/KeyCodes.h"
+#include "Swallow/Core/MouseButtonCodes.h"
 
 #include "Swallow/ImGui/ImGuiLayer.h"
 
@@ -26,5 +26,5 @@
 // ---------------------------------
 
 // ----------Entry Point------------
-#include "Swallow/EntryPoint.h"
+#include "Swallow/Core/EntryPoint.h"
 // ---------------------------------
