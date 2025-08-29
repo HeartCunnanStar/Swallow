@@ -8,6 +8,8 @@
 
 #include "Swallow/Input.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Swallow {
 
 //there is no more need after we have define SW_BIND_EVENT_FN in core.h
@@ -22,6 +24,7 @@ namespace Swallow {
 
 		m_window = std::unique_ptr<Window>(Window::Create());
 		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
+		m_window->SetVSync(false);
 
 		m_imgui_layer = new ImGuiLayer;
 		PushOverlayer(m_imgui_layer);
@@ -60,8 +63,13 @@ namespace Swallow {
 	{
 		while (m_running)
 		{
+			// Temporary
+			float time = glfwGetTime();
+			TimeStep time_step = time - m_last_time;
+			m_last_time = time;
+
 			for (Layer* layer : m_layer_stack)
-				layer->OnUpdate();
+				layer->OnUpdate(time_step);
 
 			m_imgui_layer->Begin();
 			for (Layer* layer : m_layer_stack)

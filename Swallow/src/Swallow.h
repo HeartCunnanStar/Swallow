@@ -6,6 +6,8 @@
 #include "Swallow/Layer.h"
 #include "Swallow/Log.h"
 
+#include "Swallow/Core/TimeStep.h"
+
 #include "Swallow/Input.h"
 #include "Swallow/KeyCodes.h"
 #include "Swallow/MouseButtonCodes.h"

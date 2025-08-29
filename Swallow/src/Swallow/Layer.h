@@ -2,6 +2,7 @@
 
 #include "Swallow/Core.h"
 #include "Swallow/Events/Event.h"
+#include "Swallow/Core/TimeStep.h"
 
 namespace Swallow {
 
@@ -13,7 +14,7 @@ namespace Swallow {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {} 
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(TimeStep time_step) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

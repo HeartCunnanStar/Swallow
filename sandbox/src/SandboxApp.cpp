@@ -120,20 +120,22 @@ public:
 		m_shader2.reset(new Swallow::Shader(square_vertex_src, square_fragment_src));
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Swallow::TimeStep time_step) override
 	{
+		//SW_TRACE("Delta time : {0}s", time_step.GetSeconds());
+
 		if (Swallow::Input::IsKeyDown(SW_KEY_LEFT))
-			m_camera_position.x -= m_camera_speed;
+			m_camera_position.x -= m_camera_speed * time_step;
 		else if (Swallow::Input::IsKeyDown(SW_KEY_RIGHT))
-			m_camera_position.x += m_camera_speed;
+			m_camera_position.x += m_camera_speed * time_step;
 
 		if (Swallow::Input::IsKeyDown(SW_KEY_DOWN))
-			m_camera_position.y -= m_camera_speed;
+			m_camera_position.y -= m_camera_speed * time_step;
 		else if (Swallow::Input::IsKeyDown(SW_KEY_UP))
-			m_camera_position.y += m_camera_speed;
+			m_camera_position.y += m_camera_speed * time_step;
 
 		if (Swallow::Input::IsKeyDown(SW_KEY_R))
-			m_camera_rotation += m_camera_rotation_speed;
+			m_camera_rotation += m_camera_rotation_speed * time_step;
 
 		Swallow::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Swallow::RenderCommand::Clear();
@@ -183,9 +185,9 @@ private:
 	Swallow::OrthographicCamera m_camera;
 
 	glm::vec3 m_camera_position;
-	float m_camera_speed = 0.01f;
+	float m_camera_speed = 1.0f;
 
-	float m_camera_rotation_speed = 0.1f;
+	float m_camera_rotation_speed = 10.0f;
 	float m_camera_rotation = 0.0f;
 };
 

@@ -158,14 +158,14 @@ namespace Swallow {
 		m_context->SwapBuffers();
 	}
 
-	void WindowsWindow::SetVSync(bool enabled)
+	void WindowsWindow::SetVSync(bool flag)
 	{
-		if (enabled)
+		if (flag)
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
 
-		m_data.is_vertical_sync = enabled;
+		m_data.is_vertical_sync = flag;
 	}
 
 	bool WindowsWindow::IsVSync() const
