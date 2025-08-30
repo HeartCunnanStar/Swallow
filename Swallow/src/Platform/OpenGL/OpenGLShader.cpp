@@ -17,7 +17,8 @@ namespace Swallow {
 		return GL_NONE;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertex_src, const std::string& fragment_src)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertex_src, const std::string& fragment_src)
+		: m_name(name)
 	{
 		std::unordered_map<GLenum, std::string> shader_srcs;
 		shader_srcs[GL_VERTEX_SHADER] = vertex_src;
@@ -26,7 +27,19 @@ namespace Swallow {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& path)
-	{
+	{		
+		// extract name from path
+		// can deal with belows:
+		//  renderer/Texture.glsl assests\renderer\texture texture.part1.glsl 
+		auto last_slash = path.find_last_of("/\\");
+		last_slash = last_slash == std::string::npos ? 0 : last_slash + 1;
+		auto last_dot = path.rfind('.');
+
+		auto count = last_dot == std::string::npos ? 
+			path.size() - last_slash : last_dot - last_slash;
+
+		m_name = path.substr(last_slash, count);
+
 		std::string src = ReadFile(path);
 		auto shader_srcs = PreProcess(src);
 		Compile(shader_srcs);

@@ -98,7 +98,7 @@ public:
 			}	
 		)";
 
-		m_shader = Swallow::Shader::CreateIns(vertex_src, fragment_src);
+		m_shader = Swallow::Shader::CreateIns("triangle_shader", vertex_src, fragment_src);
 
 		// shader of rectangle------------------------
 		std::string square_vertex_src = R"(
@@ -133,7 +133,7 @@ public:
 			}	
 		)";
 
-		m_shader2 = Swallow::Shader::CreateIns(square_vertex_src, square_fragment_src);
+		m_shader2 = Swallow::Shader::CreateIns("square_shader", square_vertex_src, square_fragment_src);
 
 		//-shader of texture---------------------------------
 		std::string texture_vertex_src = R"(
@@ -171,10 +171,11 @@ public:
 
 		//m_texture_shader = Swallow::Shader::CreateIns(texture_vertex_src, texture_fragment_src);
 
-		m_texture_shader = Swallow::Shader::CreateIns("assets/shaders/Texture.glsl");
+		//m_texture_shader = Swallow::Shader::CreateIns("assets/shaders/Texture.glsl");
+		auto texture_shader = m_shader_library.Load("assets/shaders/Texture.glsl");
 
-		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_texture_shader)->Bind();
-		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_texture_shader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Swallow::OpenGLShader>(texture_shader)->Bind();
+		std::dynamic_pointer_cast<Swallow::OpenGLShader>(texture_shader)->UploadUniformInt("u_Texture", 0);
 
 		m_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
 	}
@@ -217,9 +218,11 @@ public:
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 				Swallow::Renderer::Submit(m_squareVA, m_shader2, transform);
 			}
+
+		auto texture_shader = m_shader_library.Get("Texture");
 		
 		m_texture->Bind();
-		Swallow::Renderer::Submit(m_squareVA, m_texture_shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+		Swallow::Renderer::Submit(m_squareVA, texture_shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 		
 		// Triangle
 		//Swallow::Renderer::Submit(m_vertex_array, m_shader);
@@ -258,16 +261,19 @@ public:
 	}
 
 private:
+	Swallow::ShaderLibrary m_shader_library;
+
 	// fro DEBUG : triangle
 	Swallow::Ref<Swallow::VertexArray> m_vertex_array;
 	Swallow::Ref<Swallow::Shader> m_shader;
 
-	// for DEBUG : square
-	Swallow::Ref<Swallow::Shader> m_shader2, m_texture_shader;
+	// for DEBUG : square 
 	Swallow::Ref<Swallow::VertexArray> m_squareVA;
+	Swallow::Ref<Swallow::Shader> m_shader2;
 
 	// for DEBUG : texture
 	Swallow::Ref<Swallow::Texture2D> m_texture;
+	//Swallow::Ref<Swallow::Shader> m_texture_shader;
 
 	Swallow::OrthographicCamera m_camera;
 

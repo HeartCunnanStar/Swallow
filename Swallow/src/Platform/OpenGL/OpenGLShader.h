@@ -15,12 +15,14 @@ namespace Swallow {
 	class SWALLOW_API OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string& vertex_src, const std::string& fragment_src);
+		OpenGLShader(const std::string& name, const std::string& vertex_src, const std::string& fragment_src);
 		OpenGLShader(const std::string& path);
 		~OpenGLShader();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+
+		virtual const std::string& GetName() const override { return m_name; }
 
 		void UploadUniformMat3(const std::string& name, const glm::mat3 matrix);
 		void UploadUniformMat4(const std::string& name, const glm::mat4 matrix);
@@ -42,5 +44,6 @@ namespace Swallow {
 
 	private:
 		uint32_t m_rendererID = 0;
+		std::string m_name;
 	};
 }
