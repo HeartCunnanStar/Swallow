@@ -5,6 +5,12 @@
 
 namespace Swallow {
 
+	void OpenGLRendererAPI::Init()
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
@@ -18,5 +24,9 @@ namespace Swallow {
 	void OpenGLRendererAPI::DrawIndexd(const Ref<VertexArray>& vertex_array)
 	{
 		glDrawElements(GL_TRIANGLES, vertex_array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+			SW_CORE_ERROR("OpenGL error after texture loaid");
 	}
 }

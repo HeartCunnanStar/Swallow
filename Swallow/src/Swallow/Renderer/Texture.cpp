@@ -1,16 +1,16 @@
 #include "swpch.h"
-#include "VertexArray.h"
+#include "Texture.h"
 
 #include "Renderer.h"
-#include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace Swallow {
 
-	Ref<VertexArray> VertexArray::CreateIns()
+	Ref<Texture2D> Texture2D::CreateIns(const std::string& path)
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLVertexArray>(); break;
+		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLTexture2D>(path); break;
 		case RendererAPI::API::None:	SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 

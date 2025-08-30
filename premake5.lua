@@ -24,6 +24,7 @@ IncludeDir["GLFW"] = "Swallow/third_party/GLFW/include"
 IncludeDir["Glad"] = "Swallow/third_party/Glad/include"
 IncludeDir["ImGui"] = "Swallow/third_party/imgui"
 IncludeDir["glm"] = "Swallow/third_party/glm"
+IncludeDir["stb_image"] = "Swallow/third_party/stb_image"
 
 include "Swallow/third_party/GLFW"
 include "Swallow/third_party/Glad"
@@ -46,6 +47,8 @@ project "Swallow"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/third_party/stb_image/**.cpp",
+		"%{prj.name}/third_party/stb_image/**.h",
 		"%{prj.name}/third_party/glm/glm/**.hpp",
 		"%{prj.name}/third_party/glm/glm/**.inl"
 
@@ -58,7 +61,8 @@ project "Swallow"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links

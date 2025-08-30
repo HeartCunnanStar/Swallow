@@ -12,14 +12,14 @@ public:
 	ExampleLayer() : Layer("Layer"), m_camera({ -1.6f, 1.6f, -0.9f, 0.9f }), m_camera_position(0.0f),
 		m_square_position(0.0f)
 	{
-		m_vertex_array.reset(Swallow::VertexArray::CreateIns());
+		m_vertex_array = Swallow::VertexArray::CreateIns();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.9f, 0.1f, 1.0f, 1.0f,
 			 0.5f, -0.5f, 0.0f,	0.1f, 0.2f, 1.0f, 1.0f,
 			 0.0f,  0.366f, 0.0f, 1.0f, 1.0f, 0.1f, 1.0f
 		};
-		std::shared_ptr<Swallow::VertexBuffer> vertex_buffer;
+		Swallow::Ref<Swallow::VertexBuffer> vertex_buffer;
 		vertex_buffer.reset(Swallow::VertexBuffer::CreateIns(vertices, sizeof(vertices)));
 
 		Swallow::BufferLayout layout = {
@@ -31,35 +31,38 @@ public:
 		m_vertex_array->AddVertexBuffer(vertex_buffer);
 
 		unsigned int indicies[3] = { 0, 1, 2 };
-		std::shared_ptr<Swallow::IndexBuffer> index_buffer;
+		Swallow::Ref<Swallow::IndexBuffer> index_buffer;
 		index_buffer.reset(Swallow::IndexBuffer::CreateIns(indicies, sizeof(indicies) / sizeof(uint32_t)));
 		m_vertex_array->SetIndexBuffer(index_buffer);
 
 		// -----try to draw a square---------------
-		m_squareVA.reset(Swallow::VertexArray::CreateIns());
-		float sqaure_vertices[3 * 4] = {
-		   -0.75f, -0.75f, 0.0f,
-			0.75f, -0.75f, 0.0f,
-			0.75f,  0.75f, 0.0f,
-		   -0.75f,  0.75f, 0.0f,
+		m_squareVA = Swallow::VertexArray::CreateIns();
+		float sqaure_vertices[5 * 4] = {
+		   -0.75f, -0.75f, 0.0f, 0.0f, 0.0f,
+			0.75f, -0.75f, 0.0f, 1.0f, 0.0f,
+			0.75f,  0.75f, 0.0f, 1.0f, 1.0f,
+		   -0.75f,  0.75f, 0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Swallow::VertexBuffer> squareVB;
+		Swallow::Ref<Swallow::VertexBuffer> squareVB;
 		squareVB.reset(Swallow::VertexBuffer::CreateIns(sqaure_vertices, sizeof(sqaure_vertices)));
 
+		// layout
 		Swallow::BufferLayout square_layout = {
-			{ Swallow::ShaderDataType::Float3, "a_Position" }
+			{ Swallow::ShaderDataType::Float3, "a_Position" },
+			{ Swallow::ShaderDataType::Float2, "a_TexCoord" }
 		};
 
 		squareVB->SetLayout(square_layout);
 		m_squareVA->AddVertexBuffer(squareVB);
 
 		unsigned int square_indicies[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Swallow::IndexBuffer> squareIB;
+		Swallow::Ref<Swallow::IndexBuffer> squareIB;
 		squareIB.reset(Swallow::IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
 		m_squareVA->SetIndexBuffer(squareIB);
 
-		// -----------write shaders-------------------
+		//------------write shaders-------------------
+		//-shader of triangle-------------------------
 		std::string vertex_src = R"(
 			#version 330 core
 			
@@ -95,6 +98,9 @@ public:
 			}	
 		)";
 
+		m_shader.reset(Swallow::Shader::CreateIns(vertex_src, fragment_src));
+
+		// shader of rectangle------------------------
 		std::string square_vertex_src = R"(
 			#version 330 core
 			
@@ -127,8 +133,48 @@ public:
 			}	
 		)";
 
-		m_shader.reset(Swallow::Shader::CreateIns(vertex_src, fragment_src));
 		m_shader2.reset(Swallow::Shader::CreateIns(square_vertex_src, square_fragment_src));
+
+		//-shader of texture---------------------------------
+		std::string texture_vertex_src = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}	
+		)";
+
+		std::string texture_fragment_src = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_TexCoord;
+
+			uniform sampler2D u_Texture;
+
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoord);
+			}	
+		)";
+
+		m_texture_shader.reset(Swallow::Shader::CreateIns(texture_vertex_src, texture_fragment_src));
+
+		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_texture_shader)->Bind();
+		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_texture_shader)->UploadUniformInt("u_Texture", 0);
+
+		m_texture = Swallow::Texture2D::CreateIns("assests/textures/kita_test.png");
 	}
 
 	void OnUpdate(Swallow::TimeStep time_step) override
@@ -169,8 +215,11 @@ public:
 				Swallow::Renderer::Submit(m_squareVA, m_shader2, transform);
 			}
 		
-
-		Swallow::Renderer::Submit(m_vertex_array, m_shader);
+		m_texture->Bind();
+		Swallow::Renderer::Submit(m_squareVA, m_texture_shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+		
+		// Triangle
+		//Swallow::Renderer::Submit(m_vertex_array, m_shader);
 
 		Swallow::Renderer::EndScene();
 
@@ -206,12 +255,15 @@ public:
 
 private:
 	// fro DEBUG : triangle
-	std::shared_ptr<Swallow::VertexArray> m_vertex_array;
-	std::shared_ptr<Swallow::Shader> m_shader;
+	Swallow::Ref<Swallow::VertexArray> m_vertex_array;
+	Swallow::Ref<Swallow::Shader> m_shader;
 
 	// for DEBUG : square
-	std::shared_ptr<Swallow::Shader> m_shader2;
-	std::shared_ptr<Swallow::VertexArray> m_squareVA;
+	Swallow::Ref<Swallow::Shader> m_shader2, m_texture_shader;
+	Swallow::Ref<Swallow::VertexArray> m_squareVA;
+
+	// for DEBUG : texture
+	Swallow::Ref<Swallow::Texture2D> m_texture;
 
 	Swallow::OrthographicCamera m_camera;
 

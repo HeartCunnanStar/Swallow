@@ -17,6 +17,11 @@ namespace Swallow
 	{
 	}
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
+
 	void Renderer::Submit(const Ref<VertexArray>& vertex_array, const Ref<Shader>& shader, const glm::mat4& transform)
 	{
 		shader->Bind();

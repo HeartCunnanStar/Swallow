@@ -24,7 +24,9 @@ namespace Swallow {
 
 		m_window = std::unique_ptr<Window>(Window::CreateIns());
 		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
-		m_window->SetVSync(false);
+		//m_window->SetVSync(false);
+
+		Renderer::Init();
 
 		m_imgui_layer = new ImGuiLayer;
 		PushOverlayer(m_imgui_layer);
