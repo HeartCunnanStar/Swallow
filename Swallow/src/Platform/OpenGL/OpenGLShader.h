@@ -3,8 +3,12 @@
 #include "Swallow/Core/Core.h"
 #include "Swallow/Renderer/Shader.h"
 
-#include <string>
 #include <glm/glm.hpp>
+
+#include <string>
+
+// TODO : remove the def
+typedef unsigned int GLenum;
 
 namespace Swallow {
 
@@ -12,6 +16,7 @@ namespace Swallow {
 	{
 	public:
 		OpenGLShader(const std::string& vertex_src, const std::string& fragment_src);
+		OpenGLShader(const std::string& path);
 		~OpenGLShader();
 
 		virtual void Bind() const override;
@@ -29,6 +34,11 @@ namespace Swallow {
 		//void UploadUniformInt2(const std::string& name, const glm::vec4 value);
 		//void UploadUniformInt3(const std::string& name, const glm::vec4 value);
 		//void UploadUniformInt4(const std::string& name, const glm::vec4 value);
+
+	private:
+		std::string ReadFile(const std::string& path);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& src);
+		void Compile(const std::unordered_map<GLenum, std::string>& shader_src);
 
 	private:
 		uint32_t m_rendererID = 0;

@@ -13,6 +13,7 @@ namespace Swallow {
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		static Shader* CreateIns(const std::string& vertex_src, const std::string& fragment_src);
+		static Ref<Shader> CreateIns(const std::string& path);
+		static Ref<Shader> CreateIns(const std::string& vertex_src, const std::string& fragment_src);
 	};
 }

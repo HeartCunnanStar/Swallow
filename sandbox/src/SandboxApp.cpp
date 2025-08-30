@@ -98,7 +98,7 @@ public:
 			}	
 		)";
 
-		m_shader.reset(Swallow::Shader::CreateIns(vertex_src, fragment_src));
+		m_shader = Swallow::Shader::CreateIns(vertex_src, fragment_src);
 
 		// shader of rectangle------------------------
 		std::string square_vertex_src = R"(
@@ -133,7 +133,7 @@ public:
 			}	
 		)";
 
-		m_shader2.reset(Swallow::Shader::CreateIns(square_vertex_src, square_fragment_src));
+		m_shader2 = Swallow::Shader::CreateIns(square_vertex_src, square_fragment_src);
 
 		//-shader of texture---------------------------------
 		std::string texture_vertex_src = R"(
@@ -156,7 +156,7 @@ public:
 
 		std::string texture_fragment_src = R"(
 			#version 330 core
-			
+		
 			layout(location = 0) out vec4 color;
 
 			in vec2 v_TexCoord;
@@ -169,12 +169,14 @@ public:
 			}	
 		)";
 
-		m_texture_shader.reset(Swallow::Shader::CreateIns(texture_vertex_src, texture_fragment_src));
+		//m_texture_shader = Swallow::Shader::CreateIns(texture_vertex_src, texture_fragment_src);
+
+		m_texture_shader = Swallow::Shader::CreateIns("assets/shaders/Texture.glsl");
 
 		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_texture_shader)->Bind();
 		std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_texture_shader)->UploadUniformInt("u_Texture", 0);
 
-		m_texture = Swallow::Texture2D::CreateIns("assests/textures/kita_test.png");
+		m_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
 	}
 
 	void OnUpdate(Swallow::TimeStep time_step) override
@@ -200,6 +202,7 @@ public:
 		m_camera.SetPosition(m_camera_position);
 		m_camera.SetRotation(m_camera_rotation);
 
+		//------------------render--------------------
 		Swallow::Renderer::BeginScene(m_camera);
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.06f));
@@ -222,6 +225,7 @@ public:
 		//Swallow::Renderer::Submit(m_vertex_array, m_shader);
 
 		Swallow::Renderer::EndScene();
+		//---------------------------------------------------
 
 		// SW for DEBUG
 		//SW_INFO("ExampleLayer::Update");
