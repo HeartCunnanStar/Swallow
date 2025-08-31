@@ -12,10 +12,12 @@ namespace Swallow {
 	class Renderer
 	{
 	public:
-		static void BeginScene(OrthographicCamera& camera);
-		static void EndScene();
 		static void Init();
+		static void OnWinodwResize(uint32_t width, uint32_t height);
+
+		static void BeginScene(OrthographicCamera& camera);
 		static void Submit(const Ref<VertexArray>& vertex_array, const Ref<Shader>& shader, const glm::mat4& transform = glm::mat4(1.0f));
+		static void EndScene();
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 

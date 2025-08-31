@@ -9,8 +9,7 @@
 class ExampleLayer : public Swallow::Layer
 {
 public:
-	ExampleLayer() : Layer("Layer"), m_camera({ -1.6f, 1.6f, -0.9f, 0.9f }), m_camera_position(0.0f),
-		m_square_position(0.0f)
+	ExampleLayer() : Layer("Layer"), m_camera_controller(1280.0f / 720.0f, true)
 	{
 		m_vertex_array = Swallow::VertexArray::CreateIns();
 
@@ -180,31 +179,31 @@ public:
 		m_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
 	}
 
+	// update and render
 	void OnUpdate(Swallow::TimeStep time_step) override
 	{
 		//SW_TRACE("Delta time : {0}s", time_step.GetSeconds());
 
-		if (Swallow::Input::IsKeyDown(SW_KEY_LEFT))
-			m_camera_position.x -= m_camera_speed * time_step;
-		else if (Swallow::Input::IsKeyDown(SW_KEY_RIGHT))
-			m_camera_position.x += m_camera_speed * time_step;
+		//if (Swallow::Input::IsKeyDown(SW_KEY_LEFT))
+		//	m_camera_position.x -= m_camera_speed * time_step;
+		//else if (Swallow::Input::IsKeyDown(SW_KEY_RIGHT))
+		//	m_camera_position.x += m_camera_speed * time_step;
 
-		if (Swallow::Input::IsKeyDown(SW_KEY_DOWN))
-			m_camera_position.y -= m_camera_speed * time_step;
-		else if (Swallow::Input::IsKeyDown(SW_KEY_UP))
-			m_camera_position.y += m_camera_speed * time_step;
+		//if (Swallow::Input::IsKeyDown(SW_KEY_DOWN))
+		//	m_camera_position.y -= m_camera_speed * time_step;
+		//else if (Swallow::Input::IsKeyDown(SW_KEY_UP))
+		//	m_camera_position.y += m_camera_speed * time_step;
 
-		if (Swallow::Input::IsKeyDown(SW_KEY_R))
-			m_camera_rotation += m_camera_rotation_speed * time_step;
+		//if (Swallow::Input::IsKeyDown(SW_KEY_R))
+		//	m_camera_rotation += m_camera_rotation_speed * time_step;
 
 		Swallow::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Swallow::RenderCommand::Clear();
 
-		m_camera.SetPosition(m_camera_position);
-		m_camera.SetRotation(m_camera_rotation);
+		m_camera_controller.OnUpdata(time_step);
 
 		//------------------render--------------------
-		Swallow::Renderer::BeginScene(m_camera);
+		Swallow::Renderer::BeginScene(m_camera_controller.GerCamera());
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.06f));
 
@@ -246,6 +245,7 @@ public:
 
 	void OnEvent(Swallow::Event& event)  override
 	{
+		m_camera_controller.OnEvent(event);
 				// SW for DEBUG
 				//SW_TRACE("{0}", event.ToString());
 				// SW for DEBUG
@@ -275,13 +275,7 @@ private:
 	Swallow::Ref<Swallow::Texture2D> m_texture;
 	//Swallow::Ref<Swallow::Shader> m_texture_shader;
 
-	Swallow::OrthographicCamera m_camera;
-
-	glm::vec3 m_camera_position;
-	float m_camera_speed = 1.0f;
-
-	float m_camera_rotation_speed = 10.0f;
-	float m_camera_rotation = 0.0f;
+	Swallow::OrthographicCameraController m_camera_controller;
 
 	glm::vec3 m_square_position;
 	glm::vec3 m_square_color = { 0.2f, 0.3f, 0.8f };

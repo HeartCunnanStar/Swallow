@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Swallow/Core/Core.h"
 #include <glm/glm.hpp>
 
 namespace Swallow {
@@ -8,6 +9,8 @@ namespace Swallow {
 	{
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
+
+		void SetProjtction(float left, float right, float bottom, float top);
 
 		const glm::vec3& GetPosition() const { return m_position; }
 		void SetPosition(const glm::vec3& position) { m_position = position; RecalculateViewMatrix(); }
@@ -30,5 +33,4 @@ namespace Swallow {
 		glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
 		float m_rotation = 0.0f; // rotation for z
 	};
-
 }

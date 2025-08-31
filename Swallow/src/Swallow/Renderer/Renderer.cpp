@@ -22,6 +22,11 @@ namespace Swallow
 		RenderCommand::Init();
 	}
 
+	void Renderer::OnWinodwResize(uint32_t width, uint32_t height)
+	{
+		RenderCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::Submit(const Ref<VertexArray>& vertex_array, const Ref<Shader>& shader, const glm::mat4& transform)
 	{
 		shader->Bind();

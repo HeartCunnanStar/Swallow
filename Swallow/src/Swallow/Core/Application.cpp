@@ -52,6 +52,7 @@ namespace Swallow {
 	{
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(SW_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(SW_BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_layer_stack.end(); it != m_layer_stack.begin(); )
 		{
@@ -70,8 +71,11 @@ namespace Swallow {
 			TimeStep time_step = time - m_last_time;
 			m_last_time = time;
 
-			for (Layer* layer : m_layer_stack)
-				layer->OnUpdate(time_step);
+			if (!m_minimized)
+			{
+				for (Layer* layer : m_layer_stack)
+					layer->OnUpdate(time_step);
+			}	
 
 			m_imgui_layer->Begin();
 			for (Layer* layer : m_layer_stack)
@@ -90,6 +94,18 @@ namespace Swallow {
 	{
 		m_running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& event)
+	{
+		if (event.GetWidth() == 0 && event.GetHeight() == 0)
+		{
+			m_minimized = true;
+			return false;
+		}
+		m_minimized = false;
+		Renderer::OnWinodwResize(event.GetWidth(), event.GetHeight());
+		return false;
 	}
 
 }

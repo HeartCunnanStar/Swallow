@@ -32,11 +32,14 @@ namespace Swallow {
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
 
 	private:
 		ImGuiLayer* m_imgui_layer;
 		std::unique_ptr<Window> m_window;
 		bool m_running = true;
+		bool m_minimized = false;
+
 		LayerStack m_layer_stack;
 		TimeStep m_time_step;
 		float m_last_time;

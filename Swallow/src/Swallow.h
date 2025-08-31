@@ -24,6 +24,7 @@
 #include "Swallow/Renderer/Renderer.h"
 
 #include "Swallow/Renderer/OrthographicCamera.h"
+#include "Swallow/Renderer/OrthographicCameraController.h"
 // ---------------------------------
 
 // ----------Entry Point------------

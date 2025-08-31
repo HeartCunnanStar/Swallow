@@ -12,3 +12,5 @@
 /bin/
 /bin-int/
 /sandbox/sandbox.vcxproj
+/Swallow/third_party/Glad/bin-int/
+/Swallow/third_party/Glad/bin/
