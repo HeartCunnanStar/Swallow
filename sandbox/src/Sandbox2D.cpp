@@ -13,6 +13,8 @@ Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_camera_controller(1280.f / 720.f)
 
 void Sandbox2D::OnAttach()
 {
+	m_test_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
+
 	//m_squareVA = Swallow::VertexArray::CreateIns();
 	//float sqaure_vertices[5 * 4] = {
 	//   -0.75f, -0.75f, 0.0f,
@@ -55,7 +57,11 @@ void Sandbox2D::OnUpdate(Swallow::TimeStep time_step)
 
 	Swallow::Renderer2D::BeginScene(m_camera_controller.GerCamera());
 
-	Swallow::Renderer2D::DrawSquare({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Swallow::Renderer2D::DrawSquare({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f }, 45.0f);
+	Swallow::Renderer2D::DrawSquare({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+	//Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 0.5f, 0.5f }, m_test_texture);
+	Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 50.f, 50.f }, m_test_texture);
+
 	// before Renderer2D
 	//std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader)->Bind();
 	//std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader)->UploadUniformFloat4("u_Color", m_square_color);

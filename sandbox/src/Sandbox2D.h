@@ -18,7 +18,7 @@ private:
 	Swallow::OrthographicCameraController m_camera_controller;
 
 	// FOR DEBUG : will remove soon
-	Swallow::Ref<Swallow::Texture2D> m_texture;
+	Swallow::Ref<Swallow::Texture2D> m_test_texture;
 	Swallow::Ref<Swallow::Shader> m_shader;
 	Swallow::Ref<Swallow::VertexArray> m_squareVA;
 

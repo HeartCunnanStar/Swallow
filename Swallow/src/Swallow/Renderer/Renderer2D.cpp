@@ -4,7 +4,8 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Swallow/Renderer/RenderCommand.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Swallow {
 
@@ -12,6 +13,7 @@ namespace Swallow {
 	{
 		Ref<VertexArray> square_vertex_array;
 		Ref<Shader> flat_color_shader;
+		Ref<Shader> texture_shader;
 	};
 
 	static Renderer2DStorage* s_data;
@@ -22,10 +24,10 @@ namespace Swallow {
 
 		s_data->square_vertex_array = VertexArray::CreateIns();
 		float sqaure_vertices[5 * 4] = {
-		   -0.75f, -0.75f, 0.0f,
-			0.75f, -0.75f, 0.0f,
-			0.75f,  0.75f, 0.0f,
-		   -0.75f,  0.75f, 0.0f
+		   -0.75f, -0.75f, 0.0f, 0.0f, 0.0f,
+			0.75f, -0.75f, 0.0f, 1.0f, 0.0f,
+			0.75f,  0.75f, 0.0f, 1.0f, 1.0f,
+		   -0.75f,  0.75f, 0.0f, 0.0f, 1.0f
 		};
 
 		Ref<VertexBuffer> squareVB;
@@ -33,7 +35,8 @@ namespace Swallow {
 
 		// layout
 		BufferLayout square_layout = {
-			{ShaderDataType::Float3, "a_Position" }
+			{ShaderDataType::Float3, "a_Position" },
+			{ShaderDataType::Float2, "a_TexCoord" }
 		};
 
 		squareVB->SetLayout(square_layout);
@@ -45,6 +48,10 @@ namespace Swallow {
 		s_data->square_vertex_array->SetIndexBuffer(squareIB);
 
 		s_data->flat_color_shader = Shader::CreateIns("assets/shaders/FlatColor.glsl");
+		s_data->texture_shader = Shader::CreateIns("assets/shaders/Texture.glsl");
+
+		s_data->texture_shader->Bind();
+		s_data->texture_shader->SetInt("u_Texture", 0);
 	}
 
 	void Renderer2D::ShutDown()
@@ -54,24 +61,55 @@ namespace Swallow {
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_data->flat_color_shader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_data->flat_color_shader)->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(s_data->flat_color_shader)->UploadUniformMat4("u_Transform", glm::mat4(1.0f));
+		s_data->flat_color_shader->Bind();
+		s_data->flat_color_shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+
+		s_data->texture_shader->Bind();
+		s_data->texture_shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
 	{
 	}
 
-	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation)
 	{
-		DrawSquare({ position.x, position.y, 0.0f }, size, color);
+		DrawSquare({ position.x, position.y, 0.0f }, size, color, rotation);
 	}
 
-	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	// 
+	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation)
 	{
-		std::dynamic_pointer_cast<Swallow::OpenGLShader>(s_data->flat_color_shader)->Bind();
-		std::dynamic_pointer_cast<Swallow::OpenGLShader>(s_data->flat_color_shader)->UploadUniformFloat4("u_Color", color);
+		s_data->flat_color_shader->Bind();
+		s_data->flat_color_shader->SetFloat4("u_Color", color);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+		s_data->flat_color_shader->SetMat4("u_Transform", transform);
+
+		s_data->square_vertex_array->Bind();
+		RenderCommand::DrawIndexed(s_data->square_vertex_array);
+	}
+
+	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float rotation)
+	{
+		DrawSquare({ position.x, position.y, 0.0f }, size, texture, rotation);
+
+	}
+
+	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float rotation)
+	{
+		s_data->texture_shader->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		s_data->texture_shader->SetMat4("u_Transform", transform);
+
+		texture->Bind();
 
 		s_data->square_vertex_array->Bind();
 		RenderCommand::DrawIndexed(s_data->square_vertex_array);
