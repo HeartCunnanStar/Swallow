@@ -23,17 +23,17 @@
 // notice that in define sentences : there shouldn't be any space after "\" 
 
 #ifdef SW_ENABLE_ASSERTS
-#define SW_ASSERT(x, ...) do {							    \
-		if(!(x)) {											\
-			SW_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-			__debugbreak();									\
-		}													\
+#define SW_ASSERT(x, ...) do {									 \
+		if(!(x)) {												 \
+			SW_ERROR("Assertion Failed: {0}", __VA_ARGS__);		 \
+			__debugbreak();										 \
+		}														 \
 	} while (0)
-#define SW_CORE_ASSERT(x, ...) do {					        \
-		if(!(x)) {											\
+#define SW_CORE_ASSERT(x, ...) do {								 \
+		if(!(x)) {												 \
 			SW_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-			__debugbreak();									\
-		}													\
+			__debugbreak();										 \
+		}														 \
 	} while (0)
 #else
 #define SW_ASSERT(x, ...)
@@ -49,7 +49,19 @@ namespace Swallow {
 	template<class T>
 	using Scope = std::unique_ptr<T>;
 
+	template<class T, class ... Args>
+	constexpr Scope<T> CreateScope(Args&& ... args)
+	{
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
+
 	template<typename T>
 	using Ref = std::shared_ptr<T>;
+
+	template<class T, class ... Args>
+	constexpr Ref<T> CreateRef(Args&& ... args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
 
 }

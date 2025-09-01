@@ -35,5 +35,7 @@ namespace Swallow {
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 			SW_CORE_ERROR("OpenGL error after texture loaid");
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

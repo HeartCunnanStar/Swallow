@@ -12,8 +12,8 @@ namespace Swallow {
 	struct Renderer2DStorage
 	{
 		Ref<VertexArray> square_vertex_array;
-		Ref<Shader> flat_color_shader;
 		Ref<Shader> texture_shader;
+		Ref<Texture2D> white_texture;
 	};
 
 	static Renderer2DStorage* s_data;
@@ -47,9 +47,11 @@ namespace Swallow {
 		squareIB.reset(IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
 		s_data->square_vertex_array->SetIndexBuffer(squareIB);
 
-		s_data->flat_color_shader = Shader::CreateIns("assets/shaders/FlatColor.glsl");
-		s_data->texture_shader = Shader::CreateIns("assets/shaders/Texture.glsl");
+		s_data->white_texture = Texture2D::CreateIns(1, 1);
+		uint32_t white_texture_data = 0xffffffff;
+		s_data->white_texture->SetData(&white_texture_data, sizeof(uint32_t));
 
+		s_data->texture_shader = Shader::CreateIns("assets/shaders/Texture.glsl");
 		s_data->texture_shader->Bind();
 		s_data->texture_shader->SetInt("u_Texture", 0);
 	}
@@ -61,9 +63,6 @@ namespace Swallow {
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
-		s_data->flat_color_shader->Bind();
-		s_data->flat_color_shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
 		s_data->texture_shader->Bind();
 		s_data->texture_shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
@@ -80,14 +79,14 @@ namespace Swallow {
 	// 
 	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation)
 	{
-		s_data->flat_color_shader->Bind();
-		s_data->flat_color_shader->SetFloat4("u_Color", color);
+		s_data->texture_shader->SetFloat4("u_Color", color);
+		s_data->white_texture->Bind(); // bind the default white texture
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		s_data->flat_color_shader->SetMat4("u_Transform", transform);
+		s_data->texture_shader->SetMat4("u_Transform", transform);
 
 		s_data->square_vertex_array->Bind();
 		RenderCommand::DrawIndexed(s_data->square_vertex_array);
@@ -101,15 +100,16 @@ namespace Swallow {
 
 	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float rotation)
 	{
-		s_data->texture_shader->Bind();
+		// default color
+		s_data->texture_shader->SetFloat4("u_Color", glm::vec4(1.0f));
+
+		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		s_data->texture_shader->SetMat4("u_Transform", transform);
-
-		texture->Bind();
 
 		s_data->square_vertex_array->Bind();
 		RenderCommand::DrawIndexed(s_data->square_vertex_array);
