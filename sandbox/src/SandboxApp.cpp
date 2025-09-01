@@ -1,4 +1,7 @@
 #include <Swallow.h>
+#include <Swallow/Core/EntryPoint.h>
+
+#include "SandBox2D.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -286,7 +289,8 @@ class Sandbox : public Swallow::Application
 public: 
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 		//PushLayer(new Swallow::ImGuiLayer());
 	}
 

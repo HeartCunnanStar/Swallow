@@ -22,11 +22,8 @@
 
 #include "Swallow/Renderer/RenderCommand.h"
 #include "Swallow/Renderer/Renderer.h"
+#include "Swallow/Renderer/Renderer2D.h"
 
 #include "Swallow/Renderer/OrthographicCamera.h"
 #include "Swallow/Renderer/OrthographicCameraController.h"
-// ---------------------------------
-
-// ----------Entry Point------------
-#include "Swallow/Core/EntryPoint.h"
 // ---------------------------------
