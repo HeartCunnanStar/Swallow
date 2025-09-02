@@ -10,7 +10,6 @@ namespace Swallow{
 		virtual void Init() = 0;
 		virtual void SwapBuffers() = 0;
 
-		// TODO
-		void Create(void* window);
+		static Scope<GraphicsContext> CreateIns(void* window);
 	};
 }

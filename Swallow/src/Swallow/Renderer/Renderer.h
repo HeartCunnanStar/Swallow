@@ -14,6 +14,7 @@ namespace Swallow {
 	public:
 		static void Init();
 		static void OnWinodwResize(uint32_t width, uint32_t height);
+		static void Shutdown();
 
 		static void BeginScene(OrthographicCamera& camera);
 		static void Submit(const Ref<VertexArray>& vertex_array, const Ref<Shader>& shader, const glm::mat4& transform = glm::mat4(1.0f));

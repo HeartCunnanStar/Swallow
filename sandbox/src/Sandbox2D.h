@@ -23,4 +23,11 @@ private:
 	Swallow::Ref<Swallow::VertexArray> m_squareVA;
 
 	glm::vec4 m_square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
+
+	//struct PerformanceData
+	//{
+	//	const char* name;
+	//	float time;
+	//};
+	//std::vector<PerformanceData> m_performance_result;
 };

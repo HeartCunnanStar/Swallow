@@ -20,6 +20,8 @@ namespace Swallow {
 
 	void Swallow::Renderer2D::Init()
 	{
+		SW_PROFILE_FUNCTION();
+
 		s_data = new Renderer2DStorage();
 
 		s_data->square_vertex_array = VertexArray::CreateIns();
@@ -56,19 +58,25 @@ namespace Swallow {
 		s_data->texture_shader->SetInt("u_Texture", 0);
 	}
 
-	void Renderer2D::ShutDown()
+	void Renderer2D::Shutdown()
 	{
+		SW_PROFILE_FUNCTION();
+
 		delete s_data;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		SW_PROFILE_FUNCTION();
+
 		s_data->texture_shader->Bind();
 		s_data->texture_shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
 	{
+		SW_PROFILE_FUNCTION();
+
 	}
 
 	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation)
@@ -79,6 +87,8 @@ namespace Swallow {
 	// 
 	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation)
 	{
+		SW_PROFILE_FUNCTION();
+
 		s_data->texture_shader->SetFloat4("u_Color", color);
 		s_data->white_texture->Bind(); // bind the default white texture
 
@@ -100,6 +110,8 @@ namespace Swallow {
 
 	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float rotation)
 	{
+		SW_PROFILE_FUNCTION();
+
 		// default color
 		s_data->texture_shader->SetFloat4("u_Color", glm::vec4(1.0f));
 

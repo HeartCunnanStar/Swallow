@@ -14,6 +14,7 @@
 #include <unordered_set>
 
 #include "Swallow/Core/Log.h"
+#include "Swallow/Debug/Instrumentor.h"
 
 #ifdef SW_PLATFORMS_WINDOWS
 	#include <Windows.h>

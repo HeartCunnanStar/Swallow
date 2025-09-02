@@ -2,11 +2,10 @@
 #include "Application.h"
 
 #include "Swallow/Core/Log.h"
+#include "Swallow/Core/Input.h"
 
 #include "Swallow/Renderer/Renderer.h"
 #include "Swallow/Renderer/RenderCommand.h"
-
-#include "Swallow/Core/Input.h"
 
 #include <GLFW/glfw3.h>
 
@@ -19,6 +18,8 @@ namespace Swallow {
 
 	Application::Application()
 	{
+		SW_PROFILE_FUNCTION();
+
 		SW_CORE_ASSERT(!s_instance, "Application instance already had one");
 		s_instance = this;
 
@@ -34,22 +35,31 @@ namespace Swallow {
 
 	Application::~Application()
 	{
+		SW_PROFILE_FUNCTION();
+
+		Renderer::Shutdown();
 	}
 
 	void Application::PushLayer(Layer* layer)
 	{
+		SW_PROFILE_FUNCTION();
+
 		m_layer_stack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlayer(Layer* layer)
 	{
+		SW_PROFILE_FUNCTION();
+
 		m_layer_stack.PushOverlayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::OnEvent(Event& event)
 	{
+		SW_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(SW_BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(SW_BIND_EVENT_FN(Application::OnWindowResize));
@@ -64,8 +74,12 @@ namespace Swallow {
 
 	void Application::Run()
 	{
+		SW_PROFILE_FUNCTION();
+
 		while (m_running)
-		{
+		{		
+			SW_PROFILE_SCOPE("App run loop -// void Application::Run()");
+
 			// Temporary
 			float time = glfwGetTime();
 			TimeStep time_step = time - m_last_time;
@@ -73,13 +87,19 @@ namespace Swallow {
 
 			if (!m_minimized)
 			{
+				SW_PROFILE_SCOPE("LayerStack OnUpdate -// void Application::Run()");
+
 				for (Layer* layer : m_layer_stack)
 					layer->OnUpdate(time_step);
 			}	
 
 			m_imgui_layer->Begin();
-			for (Layer* layer : m_layer_stack)
-				layer->OnImGuiRender();
+			{
+				SW_PROFILE_SCOPE("LayerStack OnImGuiUpdate -// void Application::Run()");
+
+				for (Layer* layer : m_layer_stack)
+					layer->OnImGuiRender();
+			}
 			m_imgui_layer->End();
 
 			// for DEBUG
@@ -98,6 +118,8 @@ namespace Swallow {
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
+		SW_PROFILE_FUNCTION();
+
 		if (event.GetWidth() == 0 && event.GetHeight() == 0)
 		{
 			m_minimized = true;

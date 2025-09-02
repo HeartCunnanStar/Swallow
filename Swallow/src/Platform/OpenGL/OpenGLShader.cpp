@@ -20,6 +20,8 @@ namespace Swallow {
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertex_src, const std::string& fragment_src)
 		: m_name(name)
 	{
+		SW_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shader_srcs;
 		shader_srcs[GL_VERTEX_SHADER] = vertex_src;
 		shader_srcs[GL_FRAGMENT_SHADER] = fragment_src;
@@ -28,6 +30,8 @@ namespace Swallow {
 
 	OpenGLShader::OpenGLShader(const std::string& path)
 	{		
+		SW_PROFILE_FUNCTION();
+
 		// extract name from path
 		// can deal with belows:
 		//  renderer/Texture.glsl assests\renderer\texture texture.part1.glsl 
@@ -47,36 +51,50 @@ namespace Swallow {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_rendererID);
 	}
 
 	void OpenGLShader::Bind() const
 	{
+		SW_PROFILE_FUNCTION();
+
 		glUseProgram(m_rendererID);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
+		SW_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
+		SW_PROFILE_FUNCTION();
+
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3 value)
 	{
+		SW_PROFILE_FUNCTION();
+
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4 value)
 	{
+		SW_PROFILE_FUNCTION();
+
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4 value)
 	{
+		SW_PROFILE_FUNCTION();
+
 		UploadUniformMat4(name, value);
 	}
 
@@ -129,6 +147,8 @@ namespace Swallow {
 
 	std::string OpenGLShader::ReadFile(const std::string& path)
 	{
+		SW_PROFILE_FUNCTION();
+
 		std::ifstream in(path, std::ios::in | std::ios::binary);
 		if (!in.is_open())
 		{
@@ -166,6 +186,8 @@ namespace Swallow {
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& src)
 	{
+		SW_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shader_srcs;
 
 		const char* type_token = "#type";
@@ -196,6 +218,8 @@ namespace Swallow {
 	
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shader_srcs)
 	{
+		SW_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 
 		SW_CORE_ASSERT(shader_srcs.size() <= 2, "Only supports 2 shaders now!");

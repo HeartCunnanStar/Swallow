@@ -13,3 +13,6 @@
 /bin-int/
 /Swallow/third_party/Glad/bin-int/
 /Swallow/third_party/Glad/bin/
+/sandbox/SwallowProfile-Runtime.json
+/sandbox/SwallowProfile-Shutdown.json
+/sandbox/SwallowProfile-Startup.json

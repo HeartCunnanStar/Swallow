@@ -23,16 +23,22 @@ namespace Swallow {
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		SW_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		SW_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		SW_PROFILE_FUNCTION();
+
 		m_data.title = props.title;
 		m_data.width = props.width;
 		m_data.height = props.height;
@@ -41,6 +47,8 @@ namespace Swallow {
 
 		if (!s_GLFWInitialized)
 		{
+			SW_PROFILE_SCOPE("glfwInit -// void WindowsWindow::Init(const WindowProps&)");
+
 			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
 			SW_CORE_ASSERT(success, "Could not intialize GLFW!");
@@ -48,9 +56,12 @@ namespace Swallow {
 			s_GLFWInitialized = true;
 		}
 
-		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
+		{
+			SW_PROFILE_SCOPE("glfwCreateWindow -// void WindowsWindow::Init(const WindowProps&)");
+			m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
+		}
 
-		m_context = new OpenGLContext(m_window);
+		m_context = GraphicsContext::CreateIns(m_window);
 		m_context->Init();
 
 		glfwSetWindowUserPointer(m_window, &m_data);
@@ -149,17 +160,23 @@ namespace Swallow {
 
 	void WindowsWindow::Shutdown()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_window);
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool flag)
 	{
+		SW_PROFILE_FUNCTION();
+
 		if (flag)
 			glfwSwapInterval(1);
 		else

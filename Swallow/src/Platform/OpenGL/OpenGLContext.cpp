@@ -15,6 +15,8 @@ namespace Swallow {
 
 	void OpenGLContext::Init()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_window_handle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		SW_CORE_ASSERT(status, "Failed to initialize Glad!");
@@ -27,6 +29,8 @@ namespace Swallow {
 
 	void OpenGLContext::SwapBuffers()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_window_handle);
 	}
 }

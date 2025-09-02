@@ -10,7 +10,10 @@ namespace Swallow {
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_layers)
+		{
+			layer->OnDetach();
 			delete layer;
+		}
 	}
 
 	void LayerStack::PushLayer(Layer* layer)
@@ -29,6 +32,7 @@ namespace Swallow {
 		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
 		if (it != m_layers.end())
 		{
+			layer->OnDetach();
 			m_layers.erase(it);
 			--m_layer_insert_idx;
 		}
@@ -38,7 +42,10 @@ namespace Swallow {
 	{
 		auto it = std::find(m_layers.begin(), m_layers.end(), overlayer);
 		if (it != m_layers.end())
+		{
+			overlayer->OnDetach();
 			m_layers.erase(it);
+		}
 	}
 
 }

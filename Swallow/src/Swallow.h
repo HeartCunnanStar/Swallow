@@ -27,3 +27,5 @@
 #include "Swallow/Renderer/OrthographicCamera.h"
 #include "Swallow/Renderer/OrthographicCameraController.h"
 // ---------------------------------
+
+#include "Swallow/Debug/Instrumentor.h"

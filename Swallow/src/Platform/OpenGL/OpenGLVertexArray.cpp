@@ -29,26 +29,36 @@ namespace Swallow {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_rendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_rendererID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		SW_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 	}
 
 	void OpenGLVertexArray::Unbind() const
 	{
+		SW_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertex_buffer)
 	{
+		SW_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 		vertex_buffer->Bind();
 
@@ -71,6 +81,8 @@ namespace Swallow {
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& index_buffer)
 	{
+		SW_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 		index_buffer->Bind();
 

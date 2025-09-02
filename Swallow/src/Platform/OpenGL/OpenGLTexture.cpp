@@ -10,6 +10,8 @@ namespace Swallow {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_width(width), m_height(height)
 	{
+		SW_PROFILE_FUNCTION();
+
 		m_internal_format = GL_RGBA8, m_data_format = GL_RGBA;
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
@@ -25,9 +27,15 @@ namespace Swallow {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_path(path)
 	{
+		SW_PROFILE_FUNCTION();
+
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(true);
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		stbi_uc* data = nullptr;
+		{
+			SW_PROFILE_SCOPE("stbi_load -// OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		}
 		SW_CORE_ASSERT(data, "Failed to load image!");
 		m_width = width;
 		m_height = height;
@@ -65,11 +73,15 @@ namespace Swallow {
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_rendererID);
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
+		SW_PROFILE_FUNCTION();
+
 		uint32_t byte_per_pixel = m_data_format == GL_RGBA ? 4 : 3;
 		SW_CORE_ASSERT(size == m_width * m_height * byte_per_pixel, "Data doesn't equal to texture");
 
@@ -78,6 +90,8 @@ namespace Swallow {
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
+		SW_PROFILE_FUNCTION();
+
 		glBindTextureUnit(slot, m_rendererID);
 	}
 }
