@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Swallow/Layer.h"
+#include "Swallow/Core/Layer.h"
 
 #include "Swallow/Events/MouseEvent.h"
 #include "Swallow/Events/ApplicationEvent.h"
@@ -18,7 +18,9 @@ namespace Swallow {
 
 		virtual void OnDetach() override;
 		virtual void OnAttach() override;
-		virtual void OnImGuiRender() override;
+
+		// ImGui layer shouldn't render things, all render work should be done by renderer
+		//virtual void OnImGuiRender() override;
 
 		void Begin();
 		void End();

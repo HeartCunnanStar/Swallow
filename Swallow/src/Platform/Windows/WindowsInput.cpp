@@ -2,7 +2,7 @@
 #include "WindowsInput.h"
 
 #include "GLFW/glfw3.h"
-#include "Swallow/Application.h"
+#include "Swallow/Core/Application.h"
 
 namespace Swallow{
 
