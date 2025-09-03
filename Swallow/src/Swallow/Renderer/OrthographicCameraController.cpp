@@ -16,23 +16,23 @@ namespace Swallow {
 	{
 		SW_PROFILE_FUNCTION();
 
-		if (Swallow::Input::IsKeyDown(SW_KEY_LEFT))
+		if (Swallow::Input::IsKeyDown(SW_KEY_A))
 		{
 			m_camera_position.x -= cos(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 			m_camera_position.y -= sin(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 		}
-		else if (Swallow::Input::IsKeyDown(SW_KEY_RIGHT))
+		else if (Swallow::Input::IsKeyDown(SW_KEY_D))
 		{
 			m_camera_position.x += cos(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 			m_camera_position.y += sin(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 		}
 
-		if (Swallow::Input::IsKeyDown(SW_KEY_DOWN))
+		if (Swallow::Input::IsKeyDown(SW_KEY_S))
 		{
 			m_camera_position.x -= -sin(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 			m_camera_position.y -= cos(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 		}
-		else if (Swallow::Input::IsKeyDown(SW_KEY_UP))
+		else if (Swallow::Input::IsKeyDown(SW_KEY_W))
 		{
 			m_camera_position.x += -sin(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;
 			m_camera_position.y += cos(glm::radians(m_camera_rotation)) * m_camera_move_speed * time_step;

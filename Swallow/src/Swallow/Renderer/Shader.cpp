@@ -10,7 +10,7 @@ namespace Swallow {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLShader>(path); break;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLShader>(path); break;
 		case RendererAPI::API::None:	SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
@@ -22,7 +22,7 @@ namespace Swallow {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLShader>(name, vertex_src, fragment_src); break;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLShader>(name, vertex_src, fragment_src); break;
 		case RendererAPI::API::None:	SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 

@@ -32,7 +32,7 @@ namespace Swallow {
 
 		bool m_can_rotate;
 		float m_camera_rotation = 0.0f;
-		float m_camera_move_speed = 1.0f, m_camera_rotation_speed = 10.0f;
+		float m_camera_move_speed = 1.0f, m_camera_rotation_speed = 20.0f;
 		glm::vec3 m_camera_position = { 0.0f, 0.0f, 0.0f };
 
 		OrthographicCamera m_camera;

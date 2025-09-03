@@ -28,11 +28,11 @@ namespace Swallow {
 	//	return 0;
 	//}
 
-	VertexBuffer* VertexBuffer::CreateIns(float* vertices, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::CreateIns(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{		
-		case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size); break;
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>(vertices, size); break;
 		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
@@ -40,11 +40,11 @@ namespace Swallow {
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::CreateIns(uint32_t* indices, uint32_t count)
+	Ref<IndexBuffer> IndexBuffer::CreateIns(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, count); break;
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLIndexBuffer>(indices, count); break;
 		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 

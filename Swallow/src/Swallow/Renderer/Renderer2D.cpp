@@ -33,7 +33,7 @@ namespace Swallow {
 		};
 
 		Ref<VertexBuffer> squareVB;
-		squareVB.reset(VertexBuffer::CreateIns(sqaure_vertices, sizeof(sqaure_vertices)));
+		squareVB = VertexBuffer::CreateIns(sqaure_vertices, sizeof(sqaure_vertices));
 
 		// layout
 		BufferLayout square_layout = {
@@ -46,7 +46,7 @@ namespace Swallow {
 
 		unsigned int square_indicies[6] = { 0, 1, 2, 2, 3, 0 };
 		Ref<IndexBuffer> squareIB;
-		squareIB.reset(IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
+		squareIB = IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t));
 		s_data->square_vertex_array->SetIndexBuffer(squareIB);
 
 		s_data->white_texture = Texture2D::CreateIns(1, 1);
@@ -79,21 +79,21 @@ namespace Swallow {
 
 	}
 
-	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation)
+	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		DrawSquare({ position.x, position.y, 0.0f }, size, color, rotation);
+		DrawSquare({ position.x, position.y, 0.0f }, size, color);
 	}
 
 	// 
-	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation)
+	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		SW_PROFILE_FUNCTION();
 
 		s_data->texture_shader->SetFloat4("u_Color", color);
+		s_data->texture_shader->SetFloat("u_TilingFactor", 1.0f);
 		s_data->white_texture->Bind(); // bind the default white texture
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
 		s_data->texture_shader->SetMat4("u_Transform", transform);
@@ -102,18 +102,64 @@ namespace Swallow {
 		RenderCommand::DrawIndexed(s_data->square_vertex_array);
 	}
 
-	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float rotation)
+	void Renderer2D::DrawSquare(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tiling_factor, const glm::vec4 tint_color)
 	{
-		DrawSquare({ position.x, position.y, 0.0f }, size, texture, rotation);
+		DrawSquare({ position.x, position.y, 0.0f }, size, texture, tiling_factor, tint_color);
 
 	}
 
-	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float rotation)
+	void Renderer2D::DrawSquare(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tiling_factor, const glm::vec4 tint_color)
 	{
 		SW_PROFILE_FUNCTION();
 
-		// default color
-		s_data->texture_shader->SetFloat4("u_Color", glm::vec4(1.0f));
+		s_data->texture_shader->SetFloat4("u_Color", tint_color);
+		s_data->texture_shader->SetFloat("u_TilingFactor", tiling_factor);
+
+		texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		s_data->texture_shader->SetMat4("u_Transform", transform);
+
+		s_data->square_vertex_array->Bind();
+		RenderCommand::DrawIndexed(s_data->square_vertex_array);
+	}
+
+	void Renderer2D::DrawRotatedSquare(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		DrawRotatedSquare({ position.x, position.y, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotatedSquare(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		SW_PROFILE_FUNCTION();
+
+		s_data->texture_shader->SetFloat4("u_Color", color);
+		s_data->texture_shader->SetFloat("u_TilingFactor", 1.0f);
+		s_data->white_texture->Bind(); // bind the default white texture
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		s_data->texture_shader->SetMat4("u_Transform", transform);
+
+		s_data->square_vertex_array->Bind();
+		RenderCommand::DrawIndexed(s_data->square_vertex_array);
+	}
+
+	void Renderer2D::DrawRotatedSquare(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		DrawRotatedSquare({ position.x, position.y, 0.0f }, size, rotation, texture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRotatedSquare(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		SW_PROFILE_FUNCTION();
+
+		s_data->texture_shader->SetFloat4("u_Color", tint_color);
+		s_data->texture_shader->SetFloat("u_TilingFactor", tiling_factor);
 
 		texture->Bind();
 

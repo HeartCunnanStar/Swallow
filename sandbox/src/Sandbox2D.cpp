@@ -43,7 +43,7 @@
 //
 //#define SW_PERFORMANCE_SCOPE(name) Timer timer##__LINE__(name, [&](PerformanceData performance_data) { m_performance_result.push_back(performance_data); })
 
-Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_camera_controller(1280.f / 720.f)
+Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_camera_controller(1280.f / 720.f, true)
 {
 
 }
@@ -106,10 +106,10 @@ void Sandbox2D::OnUpdate(Swallow::TimeStep time_step)
 		SW_PROFILE_SCOPE("Render-draw -// void Sandbox2D::OnUpdate(Swallow::TimeStep");
 		Swallow::Renderer2D::BeginScene(m_camera_controller.GerCamera());
 
-		Swallow::Renderer2D::DrawSquare({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f }, 45.0f);
+		Swallow::Renderer2D::DrawRotatedSquare({ -1.0f, 0.0f }, { 0.8f, 0.8f }, 45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Swallow::Renderer2D::DrawSquare({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
 		//Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 0.5f, 0.5f }, m_test_texture);
-		Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 50.f, 50.f }, m_test_texture);
+		Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 50.f, 50.f }, m_test_texture, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
 		Swallow::Renderer2D::EndScene();
 	}

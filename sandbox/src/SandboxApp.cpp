@@ -22,7 +22,7 @@ public:
 			 0.0f,  0.366f, 0.0f, 1.0f, 1.0f, 0.1f, 1.0f
 		};
 		Swallow::Ref<Swallow::VertexBuffer> vertex_buffer;
-		vertex_buffer.reset(Swallow::VertexBuffer::CreateIns(vertices, sizeof(vertices)));
+		vertex_buffer = Swallow::VertexBuffer::CreateIns(vertices, sizeof(vertices));
 
 		Swallow::BufferLayout layout = {
 			{ Swallow::ShaderDataType::Float3, "a_Position" },
@@ -34,7 +34,7 @@ public:
 
 		unsigned int indicies[3] = { 0, 1, 2 };
 		Swallow::Ref<Swallow::IndexBuffer> index_buffer;
-		index_buffer.reset(Swallow::IndexBuffer::CreateIns(indicies, sizeof(indicies) / sizeof(uint32_t)));
+		index_buffer = Swallow::IndexBuffer::CreateIns(indicies, sizeof(indicies) / sizeof(uint32_t));
 		m_vertex_array->SetIndexBuffer(index_buffer);
 
 		// -----try to draw a square---------------
@@ -47,7 +47,7 @@ public:
 		};
 
 		Swallow::Ref<Swallow::VertexBuffer> squareVB;
-		squareVB.reset(Swallow::VertexBuffer::CreateIns(sqaure_vertices, sizeof(sqaure_vertices)));
+		squareVB = Swallow::VertexBuffer::CreateIns(sqaure_vertices, sizeof(sqaure_vertices));
 
 		// layout
 		Swallow::BufferLayout square_layout = {
@@ -60,7 +60,7 @@ public:
 
 		unsigned int square_indicies[6] = { 0, 1, 2, 2, 3, 0 };
 		Swallow::Ref<Swallow::IndexBuffer> squareIB;
-		squareIB.reset(Swallow::IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t)));
+		squareIB = Swallow::IndexBuffer::CreateIns(square_indicies, sizeof(square_indicies) / sizeof(uint32_t));
 		m_squareVA->SetIndexBuffer(squareIB);
 
 		//------------write shaders-------------------

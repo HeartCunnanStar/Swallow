@@ -10,7 +10,7 @@ namespace Swallow {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLVertexArray>(); break;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLVertexArray>(); break;
 		case RendererAPI::API::None:	SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
 		}
 
