@@ -16,8 +16,8 @@ namespace Swallow {
 		void OnUpdata(TimeStep time_step);
 		void OnEvent(Event& event);
 
-		OrthographicCamera& GerCamera() { return m_camera; }
-		const OrthographicCamera& GerCamera() const { return m_camera; }
+		OrthographicCamera& GetCamera() { return m_camera; }
+		const OrthographicCamera& GetCamera() const { return m_camera; }
 
 		void SetZoomLevel(float level) { m_zoom_level = level; }
 		float GetZoomLevel() const { return m_zoom_level; }

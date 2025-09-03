@@ -94,9 +94,13 @@ namespace Swallow {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
+		virtual void SetData(const void* data, uint32_t size) = 0;
+
 		static Ref<VertexBuffer> CreateIns(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> CreateIns(uint32_t size);
 	};
 
+	// can only supports 32-bits index buffer
 	class IndexBuffer
 	{
 	public:

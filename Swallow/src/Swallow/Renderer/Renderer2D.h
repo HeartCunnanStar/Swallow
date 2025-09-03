@@ -10,20 +10,34 @@ namespace Swallow {
 	public:
 		static void Init();
 		static void Shutdown();
-		
+
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 
-		static void DrawSquare(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-		static void DrawSquare(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
-		static void DrawSquare(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
-		static void DrawSquare(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
+		static void Flush();
 
-		static void DrawRotatedSquare(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
-		static void DrawRotatedSquare(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
-		static void DrawRotatedSquare(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
-		static void DrawRotatedSquare(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
+		static void DrawRectangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawRectangle(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawRectangle(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
+		static void DrawRectangle(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
 
+		static void DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
+		static void DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
+		static void DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
+		static void DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D> texture, float tiling_factor = 1.0f, const glm::vec4 tint_color = glm::vec4(1.0f));
 
+		struct Statistics
+		{
+			uint32_t DrawCalls = 0;
+			uint32_t QuadCount = 0;
+
+			uint32_t GetTotalVertexCount() { return QuadCount * 4; }
+			uint32_t GetTotalIndexCount() { return QuadCount * 6; }
+		};
+		static Statistics GetStats();
+		static void ResetStats();
+
+	private:
+		static void EndAndReset();
 	};
-}
+};

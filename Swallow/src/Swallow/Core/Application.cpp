@@ -81,7 +81,7 @@ namespace Swallow {
 			SW_PROFILE_SCOPE("App run loop -// void Application::Run()");
 
 			// Temporary
-			float time = glfwGetTime();
+			float time = static_cast<float>(glfwGetTime());
 			TimeStep time_step = time - m_last_time;
 			m_last_time = time;
 

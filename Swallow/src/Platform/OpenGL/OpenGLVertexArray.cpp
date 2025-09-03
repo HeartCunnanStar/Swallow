@@ -64,7 +64,8 @@ namespace Swallow {
 
 		SW_CORE_ASSERT(vertex_buffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
-		uint32_t index = 0; 
+		// analyze layout of vertex buffer
+		uint32_t index = 0; // index correspond to 'layout(location = index)' (in GLSL)
 		for (const auto& ele : vertex_buffer->GetLayout())
 		{
 			glEnableVertexAttribArray(index);

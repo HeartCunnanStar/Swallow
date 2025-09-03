@@ -92,6 +92,8 @@ namespace Swallow {
 	{
 		SW_PROFILE_FUNCTION();
 
+		//glActiveTexture(GL_TEXTURE0 + slot);
+		//glBindTexture(GL_TEXTURE_2D, m_rendererID);
 		glBindTextureUnit(slot, m_rendererID);
 	}
 }

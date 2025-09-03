@@ -206,7 +206,7 @@ public:
 		m_camera_controller.OnUpdata(time_step);
 
 		//------------------render--------------------
-		Swallow::Renderer::BeginScene(m_camera_controller.GerCamera());
+		Swallow::Renderer::BeginScene(m_camera_controller.GetCamera());
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.06f));
 

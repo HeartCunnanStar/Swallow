@@ -43,6 +43,6 @@ namespace Swallow
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
 
 		vertex_array->Bind();
-		RenderCommand::DrawIndexed(vertex_array);
+		RenderCommand::DrawIndexd(vertex_array);
 	}
 }

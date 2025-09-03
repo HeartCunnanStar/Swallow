@@ -96,6 +96,7 @@ void Sandbox2D::OnUpdate(Swallow::TimeStep time_step)
 	m_camera_controller.OnUpdata(time_step);
 
 	//--------------Render-------------------
+	Swallow::Renderer2D::ResetStats();
 	{
 		SW_PROFILE_SCOPE("Render-pre -// void Sandbox2D::OnUpdate(Swallow::TimeStep)");
 		Swallow::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -104,14 +105,40 @@ void Sandbox2D::OnUpdate(Swallow::TimeStep time_step)
 
 	{
 		SW_PROFILE_SCOPE("Render-draw -// void Sandbox2D::OnUpdate(Swallow::TimeStep");
-		Swallow::Renderer2D::BeginScene(m_camera_controller.GerCamera());
 
-		Swallow::Renderer2D::DrawRotatedSquare({ -1.0f, 0.0f }, { 0.8f, 0.8f }, 45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Swallow::Renderer2D::DrawSquare({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		//Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 0.5f, 0.5f }, m_test_texture);
-		Swallow::Renderer2D::DrawSquare({ 0.1f, 0.5f }, { 50.f, 50.f }, m_test_texture, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+		static float rotation = 0.0f;
+		rotation += time_step * 30.f;
+		rotation = rotation > 180.f ? -180.f : rotation;
+		if (rotation >= 18000.f)
+			SW_CORE_ASSERT(false, "big");
+
+		Swallow::Renderer2D::BeginScene(m_camera_controller.GetCamera());
+
+		//Swallow::Renderer2D::DrawRotatedRectangle({ -1.0f, 0.0f }, { 0.8f, 0.8f }, 45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
+		//Swallow::Renderer2D::DrawRectangle({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		//Swallow::Renderer2D::DrawRotatedRectangle({ 0.5f, -0.5f }, { 0.5f, 0.75f }, 45.0f, m_test_texture, 10.f, { 0.8f, 0.2f, 0.3f, 1.0f });
+		//Swallow::Renderer2D::DrawRectangle({ 0.0f, 0.2f }, { 0.5f, 0.5f }, { 1.0f, 1.0f, 0.8f, 1.0f });
+		//Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.2f }, { 0.5f, 0.5f }, rotation, { 1.0f, 1.0f, 0.8f, 1.0f });
+		//Swallow::Renderer2D::DrawRectangle({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		Swallow::Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f}, { 50.f, 50.f }, m_test_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
+		Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, 0.f, m_test_texture, 1.0f);
+		Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, rotation, m_test_texture, 1.0f);
+		Swallow::Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
 
 		Swallow::Renderer2D::EndScene();
+
+		// scene2 test
+		Swallow::Renderer2D::BeginScene(m_camera_controller.GetCamera());
+
+		for (float y = -5.0f; y < 5.0f; y += 0.5f)
+			for (float x = -5.0f; x < 5.0f; x += 0.5f)
+			{
+				glm::vec4 color = { (x + 5.f) / 10.f, 0.4f, (y + 5.f) / 10.f, 0.7f};
+				Swallow::Renderer2D::DrawRectangle({ x, y }, { 0.45f, 0.45f }, color);
+			}
+
+		Swallow::Renderer2D::EndScene();
+
 	}
 	// before Renderer2D
 	//std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader)->Bind();
@@ -125,6 +152,14 @@ void Sandbox2D::OnImGuiRender()
 	SW_PROFILE_FUNCTION();
 
 	ImGui::Begin("Settings");
+
+	auto status = Swallow::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats");
+	ImGui::Text("Draw Calls: %d", status.DrawCalls);
+	ImGui::Text("Quads:      %d", status.QuadCount);
+	ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
+	ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
+
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
 
 	//for (auto& result : m_performance_result)
