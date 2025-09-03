@@ -5,7 +5,7 @@
 #include "Swallow/Events/MouseEvent.h"
 #include "Swallow/Events/KeyEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Swallow {
 
@@ -16,23 +16,29 @@ namespace Swallow {
 		SW_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window* Window::Create(const WindowProps& props)
+	Window* Window::CreateIns(const WindowProps& props)
 	{
 		return new WindowsWindow(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		SW_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		SW_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		SW_PROFILE_FUNCTION();
+
 		m_data.title = props.title;
 		m_data.width = props.width;
 		m_data.height = props.height;
@@ -41,6 +47,8 @@ namespace Swallow {
 
 		if (!s_GLFWInitialized)
 		{
+			SW_PROFILE_SCOPE("glfwInit -// void WindowsWindow::Init(const WindowProps&)");
+
 			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
 			SW_CORE_ASSERT(success, "Could not intialize GLFW!");
@@ -48,10 +56,14 @@ namespace Swallow {
 			s_GLFWInitialized = true;
 		}
 
-		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		SW_CORE_ASSERT(status, "Failed to initialize Glad!");
+		{
+			SW_PROFILE_SCOPE("glfwCreateWindow -// void WindowsWindow::Init(const WindowProps&)");
+			m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
+		}
+
+		m_context = GraphicsContext::CreateIns(m_window);
+		m_context->Init();
+
 		glfwSetWindowUserPointer(m_window, &m_data);
 		SetVSync(true);
 
@@ -148,23 +160,29 @@ namespace Swallow {
 
 	void WindowsWindow::Shutdown()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_window);
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		SW_PROFILE_FUNCTION();
+
 		glfwPollEvents();
-		glfwSwapBuffers(m_window);
+		m_context->SwapBuffers();
 	}
 
-	void WindowsWindow::SetVSync(bool enabled)
+	void WindowsWindow::SetVSync(bool flag)
 	{
-		if (enabled)
+		SW_PROFILE_FUNCTION();
+
+		if (flag)
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
 
-		m_data.is_vertical_sync = enabled;
+		m_data.is_vertical_sync = flag;
 	}
 
 	bool WindowsWindow::IsVSync() const
