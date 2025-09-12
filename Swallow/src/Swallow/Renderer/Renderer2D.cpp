@@ -192,38 +192,22 @@ namespace Swallow {
 
 		const float texture_idx = 0.0f;
 		const float tiling_factor = 1.0f;
+		static const glm::vec2 texture_coords[4] = 
+			{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), 0.f, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[0];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[1];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[2];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[3];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
+		for (int i = 0; i < 4; ++i)
+		{
+			s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[i];
+			s_data.quadVB_cur->color = color;
+			s_data.quadVB_cur->texture_coordinate = texture_coords[i];
+			s_data.quadVB_cur->texture_index = texture_idx;
+			s_data.quadVB_cur->tiling_factor = tiling_factor;
+			++s_data.quadVB_cur;
+		}
 
 		//s_data.quadVB_cur->position = position;
 		//s_data.quadVB_cur->color = color;
@@ -297,37 +281,22 @@ namespace Swallow {
 			++s_data.texture_slot_idx;
 		}
 
+		static const glm::vec2 texture_coords[4] =
+			{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), 0.f, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[0];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[1];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[2];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[3];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
+		for (int i = 0; i < 4; ++i)
+		{
+			s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[i];
+			s_data.quadVB_cur->color = color;
+			s_data.quadVB_cur->texture_coordinate = texture_coords[i];
+			s_data.quadVB_cur->texture_index = texture_idx;
+			s_data.quadVB_cur->tiling_factor = tiling_factor;
+			++s_data.quadVB_cur;
+		}
 
 		// old 
 		//s_data.quadVB_cur->position = position;
@@ -386,37 +355,22 @@ namespace Swallow {
 		const float white_texture_idx = 0.0f;
 		const float default_tiling_factor = 1.0f;
 
+		static const glm::vec2 texture_coords[4] =
+		{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[0];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = white_texture_idx;
-		s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[1];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = white_texture_idx;
-		s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[2];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = white_texture_idx;
-		s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[3];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = white_texture_idx;
-		s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		++s_data.quadVB_cur;
+		for (int i = 0; i < 4; ++i)
+		{
+			s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[i];
+			s_data.quadVB_cur->color = color;
+			s_data.quadVB_cur->texture_coordinate = texture_coords[i];
+			s_data.quadVB_cur->texture_index = white_texture_idx;
+			s_data.quadVB_cur->tiling_factor = default_tiling_factor;
+			++s_data.quadVB_cur;
+		}
 
 		s_data.quad_idx_cnt += 6;
 
@@ -455,37 +409,22 @@ namespace Swallow {
 			++s_data.texture_slot_idx;
 		}
 
+		static const glm::vec2 texture_coords[4] =
+			{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[0];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[1];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 0.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[2];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 1.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
-
-		s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[3];
-		s_data.quadVB_cur->color = color;
-		s_data.quadVB_cur->texture_coordinate = { 0.0f, 1.0f };
-		s_data.quadVB_cur->texture_index = texture_idx;
-		s_data.quadVB_cur->tiling_factor = tiling_factor;
-		++s_data.quadVB_cur;
+		for (int i = 0; i < 4; ++i)
+		{
+			s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[i];
+			s_data.quadVB_cur->color = color;
+			s_data.quadVB_cur->texture_coordinate = texture_coords[i];
+			s_data.quadVB_cur->texture_index = texture_idx;
+			s_data.quadVB_cur->tiling_factor = tiling_factor;
+			++s_data.quadVB_cur;
+		}
 
 		s_data.quad_idx_cnt += 6;
 

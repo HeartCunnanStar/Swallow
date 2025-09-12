@@ -2,6 +2,8 @@
 
 #include <Swallow.h>
 
+#include "ParticleSystem.h"
+
 class Sandbox2D : public Swallow::Layer
 {
 public:
@@ -18,12 +20,18 @@ private:
 	Swallow::OrthographicCameraController m_camera_controller;
 
 	// FOR DEBUG : will remove soon
-	Swallow::Ref<Swallow::Texture2D> m_test_texture;
-	Swallow::Ref<Swallow::Shader> m_shader;
 	Swallow::Ref<Swallow::VertexArray> m_squareVA;
+	Swallow::Ref<Swallow::Shader> m_shader;
+
+	Swallow::Ref<Swallow::Texture2D> m_test_texture;
+	Swallow::Ref<Swallow::Texture2D> m_bg_texture;
+
+	Swallow::Ref<Swallow::Texture2D> m_sprite_sheet;
 
 	glm::vec4 m_square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 
+	ParticleSystem m_particle_system;
+	ParticleProps m_particle;
 	//struct PerformanceData
 	//{
 	//	const char* name;
