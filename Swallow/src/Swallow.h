@@ -19,6 +19,7 @@
 #include "Swallow/Renderer/Shader.h"
 #include "Swallow/Renderer/VertexArray.h"
 #include "Swallow/Renderer/Texture.h"
+#include "Swallow/Renderer/SubTexture2D.h"
 
 #include "Swallow/Renderer/RenderCommand.h"
 #include "Swallow/Renderer/Renderer.h"

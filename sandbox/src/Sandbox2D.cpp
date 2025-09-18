@@ -54,7 +54,7 @@ void Sandbox2D::OnAttach()
 
 	m_test_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
 	m_bg_texture = Swallow::Texture2D::CreateIns("assets/textures/checkboard.png");
-
+	//m_some_ele = Swallow::SubTexture2D::CreateFromCoords(m_sprite_sheet, {}, {});
 		
 	m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
 		m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };

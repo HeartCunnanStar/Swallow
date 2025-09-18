@@ -27,6 +27,7 @@ private:
 	Swallow::Ref<Swallow::Texture2D> m_bg_texture;
 
 	Swallow::Ref<Swallow::Texture2D> m_sprite_sheet;
+	Swallow::Ref<Swallow::SubTexture2D> m_some_ele;
 
 	glm::vec4 m_square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 
