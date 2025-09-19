@@ -16,6 +16,7 @@
 
 // ----------Renderer--------------
 #include "Swallow/Renderer/Buffer.h"
+#include "Swallow/Renderer/FrameBuffer.h"
 #include "Swallow/Renderer/Shader.h"
 #include "Swallow/Renderer/VertexArray.h"
 #include "Swallow/Renderer/Texture.h"

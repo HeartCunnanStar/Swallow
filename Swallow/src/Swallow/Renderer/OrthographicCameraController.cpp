@@ -85,8 +85,7 @@ namespace Swallow {
 
 		m_zoom_level -= event.GetYOffset() * 0.25f;
 		m_zoom_level = m_zoom_level < 0.2f ? 0.2f : m_zoom_level;
-		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
-		m_camera.SetProjtction(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+		CalculateView();
 
 		return false;
 	}
@@ -96,9 +95,14 @@ namespace Swallow {
 		SW_PROFILE_FUNCTION();
 
 		m_aspect_ratio = event.GetWidth() / static_cast<float>(event.GetHeight());
-		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
-		m_camera.SetProjtction(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
+		CalculateView();
 
 		return false;
+	}
+
+	void OrthographicCameraController::CalculateView()
+	{
+		m_bounds = { -m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level, -m_zoom_level, m_zoom_level };
+		m_camera.SetProjtction(m_bounds.left, m_bounds.right, m_bounds.bottom, m_bounds.top);
 	}
 }

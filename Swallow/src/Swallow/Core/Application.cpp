@@ -110,6 +110,11 @@ namespace Swallow {
 		}
 	}
 
+	void Application::Close()
+	{
+		m_running = false;
+	}
+
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_running = false;

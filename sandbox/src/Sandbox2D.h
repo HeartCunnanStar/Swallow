@@ -29,6 +29,8 @@ private:
 	Swallow::Ref<Swallow::Texture2D> m_sprite_sheet;
 	Swallow::Ref<Swallow::SubTexture2D> m_some_ele;
 
+	Swallow::Ref<Swallow::FrameBuffer> m_frame_buffer;
+
 	glm::vec4 m_square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 
 	ParticleSystem m_particle_system;

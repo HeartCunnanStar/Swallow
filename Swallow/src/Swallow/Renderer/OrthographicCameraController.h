@@ -28,7 +28,7 @@ namespace Swallow {
 		OrthographicCamera& GetCamera() { return m_camera; }
 		const OrthographicCamera& GetCamera() const { return m_camera; }
 
-		void SetZoomLevel(float level) { m_zoom_level = level; }
+		void SetZoomLevel(float level) { m_zoom_level = level; CalculateView(); }
 		float GetZoomLevel() const { return m_zoom_level; }
 
 		const OrthographicCameraBounds& GetBounds() const { return m_bounds; }
@@ -36,6 +36,8 @@ namespace Swallow {
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& event);
 		bool OnWindowResized(WindowResizeEvent& event);
+
+		void CalculateView();
 
 	private:
 		float m_aspect_ratio;

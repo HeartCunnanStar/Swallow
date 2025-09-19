@@ -15,6 +15,7 @@ namespace Swallow {
 
 		virtual uint32_t GetWidth() const override { return m_width; }
 		virtual uint32_t GetHeight() const override { return m_height; }
+		virtual uint32_t GetRendererID() const override { return m_rendererID; }
 
 		virtual void SetData(void* data, uint32_t size) override;
 
