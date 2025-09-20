@@ -22,10 +22,6 @@ namespace Swallow {
 	{
 	}
 
-	ImGuiLayer::~ImGuiLayer()
-	{
-	}
-
 	void ImGuiLayer::OnAttach()
 	{
 		SW_PROFILE_FUNCTION();
@@ -99,6 +95,16 @@ namespace Swallow {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	void ImGuiLayer::OnEvent(Event& e)
+	{
+		if (m_is_blocking_events)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.is_handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.is_handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 
 	void ImGuiLayer::Begin()

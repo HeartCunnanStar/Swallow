@@ -159,3 +159,55 @@ project "sandbox"
 		defines "SW_DIST"
 		runtime "Release"		
 		optimize "on"
+
+project "Swallow-Editor"
+	location "Swallow-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs 
+	{
+		"Swallow/third_party/spdlog/include",
+		"Swallow/third_party/imgui",
+		"Swallow/src",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"Swallow"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"SW_PLATFORMS_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "SW_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "SW_RELEASE"
+		runtime "Release"
+		optimize "on"
+			
+	filter "configurations:Dist"
+		defines "SW_DIST"
+		runtime "Release"		
+		optimize "on"

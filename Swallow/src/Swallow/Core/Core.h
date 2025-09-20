@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <memory>
 
 #ifdef SW_PLATFORMS_WINDOWS
@@ -64,4 +65,12 @@ namespace Swallow {
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
+	static const double epsilon = 1e-8;
+
+	template<typename T>
+	bool IsEqual(T a, T b, T eps = epsilon)
+	{
+		return std::fabs(a - b) < eps;
+	}
+	
 }

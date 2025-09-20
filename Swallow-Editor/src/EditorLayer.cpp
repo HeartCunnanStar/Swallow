@@ -1,0 +1,260 @@
+#include "EditorLayer.h"
+
+#include "Platform/OpenGL/OpenGLShader.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
+
+#include <chrono>
+
+namespace Swallow {
+
+	EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1280.f / 720.f, true)
+	{
+
+	}
+
+	void EditorLayer::OnAttach()
+	{
+		SW_PROFILE_FUNCTION();
+
+		m_test_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
+		m_bg_texture = Swallow::Texture2D::CreateIns("assets/textures/checkboard.png");
+		//m_some_ele = Swallow::SubTexture2D::CreateFromCoords(m_sprite_sheet, {}, {});
+
+		// build frame buffer
+		Swallow::FrameBufferSpecification FB_spec;
+		FB_spec.width = 1280;
+		FB_spec.height = 720;
+		m_frame_buffer = Swallow::FrameBuffer::Create(FB_spec);
+
+		//m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
+		//	m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+		//m_particle.size_begin = 0.1f,
+		//	m_particle.size_end = 0.0f;
+
+		//m_particle.size_variation = 0.3f;
+		//m_particle.life_time = 5.0f;
+		//m_particle.velocity = { 0.0f, 0.0f };
+		//m_particle.velocity_variation = { 3.0f, 1.0f };
+		//m_particle.position = { 0.0f, 0.0f };
+	}
+
+	void EditorLayer::OnDetach()
+	{
+		SW_PROFILE_FUNCTION();
+
+	}
+
+	void EditorLayer::OnUpdate(Swallow::TimeStep time_step)
+	{
+		SW_PROFILE_FUNCTION();
+
+		//--------------Updata-------------------
+		//Timer timer("EditorLayer::Onupdate", [&](auto performance_data) {m_porformance_result.push_back(performance_data)});
+		if (m_view_is_focused)
+			m_camera_controller.OnUpdata(time_step);
+
+		//--------------Render-------------------
+		Swallow::Renderer2D::ResetStats();
+		{
+			SW_PROFILE_SCOPE("Render-pre -// void EditorLayer::OnUpdate(Swallow::TimeStep)");
+			m_frame_buffer->Bind();
+			Swallow::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			Swallow::RenderCommand::Clear();
+		}
+
+		{
+			SW_PROFILE_SCOPE("Render-draw -// void EditorLayer::OnUpdate(Swallow::TimeStep");
+
+			static float rotation = 0.0f;
+			rotation += time_step * 30.f;
+			rotation = rotation > 180.f ? -180.f : rotation;
+			if (rotation >= 18000.f)
+				SW_CORE_ASSERT(false, "too big");
+
+			Swallow::Renderer2D::BeginScene(m_camera_controller.GetCamera());
+
+			//Swallow::Renderer2D::DrawRotatedRectangle({ -1.0f, 0.0f }, { 0.8f, 0.8f }, 45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
+			//Swallow::Renderer2D::DrawRectangle({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+			//Swallow::Renderer2D::DrawRotatedRectangle({ 0.5f, -0.5f }, { 0.5f, 0.75f }, 45.0f, m_test_texture, 10.f, { 0.8f, 0.2f, 0.3f, 1.0f });
+			//Swallow::Renderer2D::DrawRectangle({ 0.0f, 0.2f }, { 0.5f, 0.5f }, { 1.0f, 1.0f, 0.8f, 1.0f });
+			//Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.2f }, { 0.5f, 0.5f }, rotation, { 1.0f, 1.0f, 0.8f, 1.0f });
+			//Swallow::Renderer2D::DrawRectangle({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+			Swallow::Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f }, { 50.f, 50.f }, m_bg_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
+			Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(0.f), m_test_texture, 1.0f);
+			Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), m_test_texture, 1.0f);
+			Swallow::Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
+
+			Swallow::Renderer2D::EndScene();
+
+			// scene2 test
+			Swallow::Renderer2D::BeginScene(m_camera_controller.GetCamera());
+
+			//for (float y = -5.0f; y < 5.0f; y += 0.5f)
+			//	for (float x = -5.0f; x < 5.0f; x += 0.5f)
+			//	{
+			//		glm::vec4 color  = { (x + 5.f) / 10.f, 0.4f, (y + 5.f) / 10.f, 0.7f};
+			//		Swallow::Renderer2D::DrawRectangle({ x, y }, { 0.45f, 0.45f }, color);
+			//	}
+
+			Swallow::Renderer2D::EndScene();
+
+		}
+
+		//if (Swallow::Input::IsMouseButtonDown(SW_MOUSE_BUTTON_LEFT))
+		//{
+		//	SW_PROFILE_SCOPE("particle render -// void EditorLayer::OnUpdate(Swallow::TimeStep");
+		//	;
+		//	auto [x, y] = Swallow::Input::GetMousePos();
+		//	auto width = Swallow::Application::GetIns().GetWindow().GetWidth();
+		//	auto height = Swallow::Application::GetIns().GetWindow().GetHeight();
+
+		//	auto bounds = m_camera_controller.GetBounds();
+		//	auto pos = m_camera_controller.GetCamera().GetPosition();
+		//	x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		//	y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		//	m_particle.position = { x + pos.x, y + pos.y };
+		//	for (int i = 0; i < 1; i++)
+		//		m_particle_system.Emit(m_particle);
+		//}
+		//m_particle_system.OnUpdate(time_step);
+		//m_particle_system.OnRender(m_camera_controller.GetCamera());
+
+		m_frame_buffer->Unbind();
+	}
+
+	void EditorLayer::OnImGuiRender()
+	{
+		SW_PROFILE_FUNCTION();
+
+		static bool docking_is_enabled = true;
+		if (docking_is_enabled)
+		{
+			static bool dockspace_is_opened = true;
+			static bool opt_is_fullscreen_persistent = true;
+			bool opt_is_fullscreen = opt_is_fullscreen_persistent;
+			static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+			if (opt_is_fullscreen)
+			{
+				ImGuiViewport* viewport = ImGui::GetMainViewport();
+				ImGui::SetNextWindowPos(viewport->Pos);
+				ImGui::SetNextWindowSize(viewport->Size);
+				ImGui::SetNextWindowViewport(viewport->ID);
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+				window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+				window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+			}
+
+			if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+				window_flags |= ImGuiWindowFlags_NoBackground;
+
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+			ImGui::Begin("DockSpace Demo", &dockspace_is_opened, window_flags);
+			ImGui::PopStyleVar();
+
+			if (opt_is_fullscreen)
+				ImGui::PopStyleVar(2);
+
+			// Dockspace
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+			{
+				ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+			}
+
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("File"))
+				{
+					if (ImGui::MenuItem("Exit"))
+						Swallow::Application::GetIns().Close();
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMenuBar();
+			}
+
+			ImGui::Begin("Settings");
+
+			auto status = Swallow::Renderer2D::GetStats();
+			ImGui::Text("Renderer2D Stats");
+			ImGui::Text("Draw Calls: %d", status.DrawCalls);
+			ImGui::Text("Quads:      %d", status.QuadCount);
+			ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
+			ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
+			//for (auto& result : m_performance_result)
+			//{
+			//	char label_buffer[64];
+			//	strcpy(label_buffer, result.name);
+			//	strcat(label_buffer, " %.3fms");
+			//	ImGui::Text(label_buffer, result.time);
+			//}
+			//m_performance_result.clear();
+
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
+
+			ImGui::End();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+			ImGui::Begin("Viewport");
+
+			// only when Focused && Hovered will convet events 
+			m_view_is_focused = ImGui::IsWindowFocused();
+			m_view_is_hovered = ImGui::IsWindowHovered();
+			Application::GetIns().GetImGuiLayer()->SetBlockEvents(!(m_view_is_focused && m_view_is_hovered));
+
+			ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
+
+			if (!(IsEqual(viewport_panel_size.x, m_viewport_size.x) && IsEqual(viewport_panel_size.y, m_viewport_size.y))
+				 && m_viewport_size.x > 0 && m_viewport_size.y > 0)
+			{
+				m_frame_buffer->Resize(viewport_panel_size.x, viewport_panel_size.y);
+				m_viewport_size = { viewport_panel_size.x, viewport_panel_size.y };
+
+				m_camera_controller.OnResize(viewport_panel_size.x, viewport_panel_size.y);
+				//SW_INFO("Viewport size: {0}, {1}", viewport_panel_size.x, viewport_panel_size.y);
+			}
+			uint32_t textureID = m_frame_buffer->GetColorAttachment();
+			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2(m_viewport_size.x, m_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::End();
+			ImGui::PopStyleVar();
+
+			ImGui::End();
+		}
+		else
+		{
+			ImGui::Begin("Settings");
+
+			auto status = Swallow::Renderer2D::GetStats();
+			ImGui::Text("Renderer2D Stats");
+			ImGui::Text("Draw Calls: %d", status.DrawCalls);
+			ImGui::Text("Quads:      %d", status.QuadCount);
+			ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
+			ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
+			//for (auto& result : m_performance_result)
+			//{
+			//	char label_buffer[64];
+			//	strcpy(label_buffer, result.name);
+			//	strcat(label_buffer, " %.3fms");
+			//	ImGui::Text(label_buffer, result.time);
+			//}
+			//m_performance_result.clear();
+
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
+			//ImGui::Image(reinterpret_cast<void*>(m_bg_texture->GetRendererID()), ImVec2(64.f, 64.f));
+			ImGui::Image(reinterpret_cast<void*>(m_frame_buffer->GetColorAttachment()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::End();
+		}
+	}
+
+	void EditorLayer::OnEvent(Swallow::Event& event)
+	{
+		m_camera_controller.OnEvent(event);
+	}
+}

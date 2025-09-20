@@ -5,6 +5,8 @@
 
 namespace Swallow {
 
+	static const uint32_t s_max_frame_buffer_size = 8848;
+
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
 		: m_specification(spec)
 	{
@@ -14,11 +16,14 @@ namespace Swallow {
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		glDeleteFramebuffers(1, &m_rendererID);
+		glDeleteTextures(1, &m_color_attachment);
+		glDeleteTextures(1, &m_depth_attachment);
 	}
 
 	void OpenGLFrameBuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);
+		glViewport(0, 0, m_specification.width, m_specification.height);
 	}
 
 	void OpenGLFrameBuffer::Unbind()
@@ -26,10 +31,28 @@ namespace Swallow {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
+	{
+		if (width == 0 || height == 0 || width > s_max_frame_buffer_size || height > s_max_frame_buffer_size)
+		{
+			SW_CORE_WARN("Attemped to resize to ({0}, {1})", width, height);
+			return;
+		}
+
+		m_specification.width = width;
+		m_specification.height = height;
+
+		Invalidate();
+	}
+
 	void OpenGLFrameBuffer::Invalidate()
 	{
 		if (m_rendererID)
+		{
 			glDeleteFramebuffers(1, &m_rendererID);
+			glDeleteTextures(1, &m_color_attachment);
+			glDeleteTextures(1, &m_depth_attachment);
+		}
 
 		glCreateFramebuffers(1, &m_rendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);

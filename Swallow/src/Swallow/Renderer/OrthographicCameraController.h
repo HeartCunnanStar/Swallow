@@ -24,12 +24,14 @@ namespace Swallow {
 
 		void OnUpdata(TimeStep time_step);
 		void OnEvent(Event& event);
+		void OnResize(float width, float height);
 
 		OrthographicCamera& GetCamera() { return m_camera; }
 		const OrthographicCamera& GetCamera() const { return m_camera; }
 
 		void SetZoomLevel(float level) { m_zoom_level = level; CalculateView(); }
 		float GetZoomLevel() const { return m_zoom_level; }
+
 
 		const OrthographicCameraBounds& GetBounds() const { return m_bounds; }
 

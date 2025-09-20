@@ -56,12 +56,6 @@ void Sandbox2D::OnAttach()
 	m_bg_texture = Swallow::Texture2D::CreateIns("assets/textures/checkboard.png");
 	//m_some_ele = Swallow::SubTexture2D::CreateFromCoords(m_sprite_sheet, {}, {});
 
-	// build frame buffer
-	Swallow::FrameBufferSpecification FB_spec;
-	FB_spec.width = 1280;
-	FB_spec.height = 720;
-	m_frame_buffer = Swallow::FrameBuffer::Create(FB_spec);
-
 	m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
 		m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
 	m_particle.size_begin = 0.1f,
@@ -113,7 +107,6 @@ void Sandbox2D::OnUpdate(Swallow::TimeStep time_step)
 	Swallow::Renderer2D::ResetStats();
 	{
 		SW_PROFILE_SCOPE("Render-pre -// void Sandbox2D::OnUpdate(Swallow::TimeStep)");
-		m_frame_buffer->Bind();
 		Swallow::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Swallow::RenderCommand::Clear();
 	}
@@ -175,7 +168,6 @@ void Sandbox2D::OnUpdate(Swallow::TimeStep time_step)
 	m_particle_system.OnUpdate(time_step);
 	m_particle_system.OnRender(m_camera_controller.GetCamera());
 
-	m_frame_buffer->Unbind();
 	// before Renderer2D
 	//std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader)->Bind();
 	//std::dynamic_pointer_cast<Swallow::OpenGLShader>(m_shader)->UploadUniformFloat4("u_Color", m_square_color);
@@ -186,108 +178,28 @@ void Sandbox2D::OnImGuiRender()
 {
 	SW_PROFILE_FUNCTION();
 
-	static bool docking_is_enabled = true;
-	if (docking_is_enabled)
-	{
-		static bool dockspace_is_opened = true;
-		static bool opt_is_fullscreen_persistent = true;
-		bool opt_is_fullscreen = opt_is_fullscreen_persistent;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+	ImGui::Begin("Settings");
 
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		if (opt_is_fullscreen)
-		{
-			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->Pos);
-			ImGui::SetNextWindowSize(viewport->Size);
-			ImGui::SetNextWindowViewport(viewport->ID);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-		}
+	auto status = Swallow::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats");
+	ImGui::Text("Draw Calls: %d", status.DrawCalls);
+	ImGui::Text("Quads:      %d", status.QuadCount);
+	ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
+	ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
+	//for (auto& result : m_performance_result)
+	//{
+	//	char label_buffer[64];
+	//	strcpy(label_buffer, result.name);
+	//	strcat(label_buffer, " %.3fms");
+	//	ImGui::Text(label_buffer, result.time);
+	//}
+	//m_performance_result.clear();
 
-		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-			window_flags |= ImGuiWindowFlags_NoBackground;
+	//ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
+	//ImGui::Image(reinterpret_cast<void*>(m_bg_texture->GetRendererID()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
+	//ImGui::Image(reinterpret_cast<void*>(m_frame_buffer->GetColorAttachment()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::End();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace Demo", &dockspace_is_opened, window_flags);
-		ImGui::PopStyleVar();
-
-		if (opt_is_fullscreen)
-			ImGui::PopStyleVar(2);
-
-		// Dockspace
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-		{
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		}
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Exit"))
-					Swallow::Application::GetIns().Close();
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenuBar();
-		}
-
-		ImGui::Begin("Settings");
-
-		auto status = Swallow::Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats");
-		ImGui::Text("Draw Calls: %d", status.DrawCalls);
-		ImGui::Text("Quads:      %d", status.QuadCount);
-		ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
-		ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
-		//for (auto& result : m_performance_result)
-		//{
-		//	char label_buffer[64];
-		//	strcpy(label_buffer, result.name);
-		//	strcat(label_buffer, " %.3fms");
-		//	ImGui::Text(label_buffer, result.time);
-		//}
-		//m_performance_result.clear();
-
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
-		//ImGui::Image(reinterpret_cast<void*>(m_bg_texture->GetRendererID()), ImVec2(1280.f, 720.f));
-		ImGui::Image(reinterpret_cast<void*>(m_frame_buffer->GetColorAttachment()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
-
-		ImGui::End();
-
-		ImGui::End();
-	}
-	else
-	{
-		ImGui::Begin("Settings");
-
-		auto status = Swallow::Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats");
-		ImGui::Text("Draw Calls: %d", status.DrawCalls);
-		ImGui::Text("Quads:      %d", status.QuadCount);
-		ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
-		ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
-		//for (auto& result : m_performance_result)
-		//{
-		//	char label_buffer[64];
-		//	strcpy(label_buffer, result.name);
-		//	strcat(label_buffer, " %.3fms");
-		//	ImGui::Text(label_buffer, result.time);
-		//}
-		//m_performance_result.clear();
-
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
-		//ImGui::Image(reinterpret_cast<void*>(m_bg_texture->GetRendererID()), ImVec2(64.f, 64.f));
-		ImGui::Image(reinterpret_cast<void*>(m_frame_buffer->GetColorAttachment()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
-		ImGui::End();
-	}
-	//static bool show = true;
-	//ImGui::ShowDemoWindow(&show);
 }
 
 void Sandbox2D::OnEvent(Swallow::Event& event)

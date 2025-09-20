@@ -79,6 +79,12 @@ namespace Swallow {
 		dispatcher.Dispatch<WindowResizeEvent>(SW_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 	}
 
+	void OrthographicCameraController::OnResize(float width, float height)
+	{
+		m_aspect_ratio = width / height;
+		CalculateView();
+	}
+
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& event)
 	{
 		SW_PROFILE_FUNCTION();
@@ -94,8 +100,9 @@ namespace Swallow {
 	{
 		SW_PROFILE_FUNCTION();
 
-		m_aspect_ratio = event.GetWidth() / static_cast<float>(event.GetHeight());
-		CalculateView();
+		OnResize(event.GetWidth(), event.GetHeight());
+		//m_aspect_ratio = event.GetWidth() / static_cast<float>(event.GetHeight());
+		//CalculateView();
 
 		return false;
 	}
