@@ -185,6 +185,41 @@ namespace Swallow {
 
 	void Renderer2D::DrawRectangle(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawRectangle(transform, color);
+	}
+
+	void Renderer2D::DrawRectangle(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		DrawRectangle({ position.x, position.y, 0.0f }, size, texture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRectangle(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawRectangle(transform, texture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRectangle(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		DrawRectangle({ position.x, position.y, 0.0f }, size, subtexture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRectangle(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawRectangle(transform, subtexture, tiling_factor, tint_color);
+	}
+
+	//------------impl--------------
+	void Renderer2D::DrawRectangle(const glm::mat4& transform, const glm::vec4& color)
+	{
 		SW_PROFILE_FUNCTION();
 
 		if (s_data.quad_idx_cnt >= Renderer2DData::max_indices)
@@ -194,11 +229,8 @@ namespace Swallow {
 		constexpr float tiling_factor = 1.0f;
 
 		constexpr size_t quad_vertex_cnt = 4;
-		static const glm::vec2 texture_coords[4] = 
-			{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		static const glm::vec2 texture_coords[4] =
+		{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 
 		for (int i = 0; i < quad_vertex_cnt; ++i)
 		{
@@ -209,53 +241,12 @@ namespace Swallow {
 			s_data.quadVB_cur->tiling_factor = tiling_factor;
 			++s_data.quadVB_cur;
 		}
-
-		//s_data.quadVB_cur->position = position;
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 0.0f, 0.0f };
-		//s_data.quadVB_cur->texture_index = white_texture_idx;
-		//s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		//++s_data.quadVB_cur;
-		//
-		//s_data.quadVB_cur->position = { position.x + size.x, position.y, 0.0f };
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 1.0f, 0.0f };		
-		//s_data.quadVB_cur->texture_index = white_texture_idx;
-		//s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		//++s_data.quadVB_cur;
-		//
-		//s_data.quadVB_cur->position = { position.x + size.x, position.y + size.y, 0.0f };
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 1.0f, 1.0f };
-		//s_data.quadVB_cur->texture_index = white_texture_idx;
-		//s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		//++s_data.quadVB_cur;
-		//
-		//s_data.quadVB_cur->position = { position.x, position.y + size.y, 0.0f };
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 0.0f, 1.0f };
-		//s_data.quadVB_cur->texture_index = white_texture_idx;
-		//s_data.quadVB_cur->tiling_factor = default_tiling_factor;
-		//++s_data.quadVB_cur;
-
 		s_data.quad_idx_cnt += 6;
 
 		++s_data.statistics.QuadCount;
-		//s_data.white_texture->Bind(); // bind the default white texture
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
-		//	* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-		//s_data.texture_shader->SetMat4("u_Transform", transform);
-		//s_data.quad_vertex_array->Bind();
-		//RenderCommand::DrawIndexd(s_data.quad_vertex_array);
 	}
 
-	void Renderer2D::DrawRectangle(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
-	{
-		DrawRectangle({ position.x, position.y, 0.0f }, size, texture, tiling_factor, tint_color);
-
-	}
-
-	void Renderer2D::DrawRectangle(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
+	void Renderer2D::DrawRectangle(const glm::mat4& transform, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
 	{
 		SW_PROFILE_FUNCTION();
 
@@ -266,7 +257,7 @@ namespace Swallow {
 
 		constexpr size_t quad_vertex_cnt = 4;
 		static const glm::vec2 texture_coords[4] =
-			{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+		{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 
 		float texture_idx = 0.0f;
 
@@ -278,7 +269,7 @@ namespace Swallow {
 				break;
 			}
 		}
-		 
+
 		// if didn't find, then added it
 		if (texture_idx == 0.0f)
 		{
@@ -286,9 +277,6 @@ namespace Swallow {
 			s_data.texture_slots[s_data.texture_slot_idx] = texture;
 			++s_data.texture_slot_idx;
 		}
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		for (int i = 0; i < quad_vertex_cnt; ++i)
 		{
@@ -299,55 +287,13 @@ namespace Swallow {
 			s_data.quadVB_cur->tiling_factor = tiling_factor;
 			++s_data.quadVB_cur;
 		}
-
-		// old 
-		//s_data.quadVB_cur->position = position;
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 0.0f, 0.0f };
-		//s_data.quadVB_cur->texture_index = texture_idx;
-		//s_data.quadVB_cur->tiling_factor = tiling_factor;
-		//++s_data.quadVB_cur;
-		//
-		//s_data.quadVB_cur->position = { position.x + size.x, position.y, 0.0f };
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 1.0f, 0.0f };
-		//s_data.quadVB_cur->texture_index = texture_idx;
-		//s_data.quadVB_cur->tiling_factor = tiling_factor;
-		//++s_data.quadVB_cur;
-		//
-		//s_data.quadVB_cur->position = { position.x + size.x, position.y + size.y, 0.0f };
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 1.0f, 1.0f };
-		//s_data.quadVB_cur->texture_index = texture_idx;
-		//s_data.quadVB_cur->tiling_factor = tiling_factor;
-		//++s_data.quadVB_cur;
-		// 
-		//s_data.quadVB_cur->position = { position.x, position.y + size.y, 0.0f };
-		//s_data.quadVB_cur->color = color;
-		//s_data.quadVB_cur->texture_coordinate = { 0.0f, 1.0f };
-		//s_data.quadVB_cur->texture_index = texture_idx;
-		//s_data.quadVB_cur->tiling_factor = tiling_factor;
-		//++s_data.quadVB_cur;
-
 		s_data.quad_idx_cnt += 6;
 
 		++s_data.statistics.QuadCount;
 
-		//s_data.texture_shader->SetFloat4("u_Color", tint_color);
-		//texture->Bind();
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-		//	* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		//s_data.texture_shader->SetMat4("u_Transform", transform);
-		//s_data.quad_vertex_array->Bind();
-		//RenderCommand::DrawIndexd(s_data.quad_vertex_array);
 	}
 
-	void Renderer2D::DrawRectangle(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
-	{
-		DrawRectangle({ position.x, position.y, 0.0f }, size, subtexture, tiling_factor, tint_color);
-	}
-
-	void Renderer2D::DrawRectangle(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
+	void Renderer2D::DrawRectangle(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
 	{
 		SW_PROFILE_FUNCTION();
 
@@ -380,9 +326,6 @@ namespace Swallow {
 			++s_data.texture_slot_idx;
 		}
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
 		for (int i = 0; i < quad_vertex_cnt; ++i)
 		{
 			s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[i];
@@ -397,12 +340,51 @@ namespace Swallow {
 		++s_data.statistics.QuadCount;
 	}
 
+
 	void Renderer2D::DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
 		DrawRotatedRectangle({ position.x, position.y, 0.0f }, size, rotation, color);
 	}
 
 	void Renderer2D::DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawRotatedRectangle(transform, color);
+	}
+
+	void Renderer2D::DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		DrawRotatedRectangle({ position.x, position.y, 0.0f }, size, rotation, texture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawRotatedRectangle(transform, texture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		DrawRotatedRectangle({ position.x, position.y, 0.0f }, size, rotation, subtexture, tiling_factor, tint_color);
+	}
+
+	void Renderer2D::DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawRotatedRectangle(transform, subtexture, tiling_factor, tint_color);
+	}
+
+	//------------impl--------------
+	void Renderer2D::DrawRotatedRectangle(const glm::mat4& transform, const glm::vec4& color)
 	{
 		SW_PROFILE_FUNCTION();
 
@@ -415,10 +397,6 @@ namespace Swallow {
 
 		static const glm::vec2 texture_coords[4] =
 		{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		for (int i = 0; i < quad_vertex_cnt; ++i)
 		{
@@ -435,12 +413,7 @@ namespace Swallow {
 		++s_data.statistics.QuadCount;
 	}
 
-	void Renderer2D::DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
-	{
-		DrawRotatedRectangle({ position.x, position.y, 0.0f }, size, rotation, texture, tiling_factor, tint_color);
-	}
-
-	void Renderer2D::DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
+	void Renderer2D::DrawRotatedRectangle(const glm::mat4& transform, const Ref<Texture2D>& texture, float tiling_factor, const glm::vec4 tint_color)
 	{
 		SW_PROFILE_FUNCTION();
 
@@ -449,7 +422,7 @@ namespace Swallow {
 
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		static const glm::vec2 texture_coords[4] =
-			{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+		{ {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 
 		float texture_idx = 0.0f;
 
@@ -470,10 +443,6 @@ namespace Swallow {
 			++s_data.texture_slot_idx;
 		}
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
 		for (int i = 0; i < 4; ++i)
 		{
 			s_data.quadVB_cur->position = transform * s_data.quad_vertex_positions[i];
@@ -489,12 +458,7 @@ namespace Swallow {
 		++s_data.statistics.QuadCount;
 	}
 
-	void Renderer2D::DrawRotatedRectangle(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
-	{
-		DrawRotatedRectangle({ position.x, position.y, 0.0f }, size, rotation, subtexture, tiling_factor, tint_color);
-	}
-
-	void Renderer2D::DrawRotatedRectangle(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
+	void Renderer2D::DrawRotatedRectangle(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tiling_factor, const glm::vec4 tint_color)
 	{
 		SW_PROFILE_FUNCTION();
 
@@ -525,10 +489,6 @@ namespace Swallow {
 			s_data.texture_slots[s_data.texture_slot_idx] = texture;
 			++s_data.texture_slot_idx;
 		}
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		for (int i = 0; i < quad_vertex_cnt; ++i)
 		{

@@ -19,6 +19,8 @@ namespace Swallow {
 	private:
 		OrthographicCameraController m_camera_controller;
 
+		Ref<Scene> m_active_scene;
+
 		Ref<VertexArray> m_squareVA;
 		Ref<Shader> m_shader;
 

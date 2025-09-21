@@ -1,6 +1,7 @@
 #pragma once
 
 // only for applying
+#include "Swallow/Core/Core.h"
 
 #include "Swallow/Core/Application.h"
 #include "Swallow/Core/Layer.h"
@@ -13,6 +14,9 @@
 #include "Swallow/Core/MouseButtonCodes.h"
 
 #include "Swallow/ImGui/ImGuiLayer.h"
+
+#include "Swallow/Scene/Scene.h"
+#include "Swallow/Scene/Components.h"
 
 // ----------Renderer--------------
 #include "Swallow/Renderer/Buffer.h"

@@ -2,13 +2,16 @@
 
 #include "Swallow/Core/Core.h"
 
+#include "Swallow/Core/KeyCodes.h"
+#include "Swallow/Core/MouseButtonCodes.h"
+
 namespace Swallow {
 
 	class SWALLOW_API Input
 	{
 	public:
-		static bool IsKeyDown(int keycode);
-		static bool IsMouseButtonDown(int button);
+		static bool IsKeyDown(KeyCode keycode);
+		static bool IsMouseButtonDown(MouseCode button);
 		static float GetMouseX();
 		static float GetMouseY();
 		static std::pair<float, float> GetMousePos();

@@ -10,7 +10,10 @@
 
 namespace Swallow {
 
-	EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1280.f / 720.f, true)
+	EditorLayer::EditorLayer() : 
+		Layer("EditorLayer"), 
+		m_camera_controller(1280.f / 720.f, true),
+		m_viewport_size(1280.0f, 720.0f)
 	{
 
 	}
@@ -19,16 +22,22 @@ namespace Swallow {
 	{
 		SW_PROFILE_FUNCTION();
 
-		m_test_texture = Swallow::Texture2D::CreateIns("assets/textures/kita_test.png");
-		m_bg_texture = Swallow::Texture2D::CreateIns("assets/textures/checkboard.png");
-		//m_some_ele = Swallow::SubTexture2D::CreateFromCoords(m_sprite_sheet, {}, {});
+		m_test_texture = Texture2D::CreateIns("assets/textures/kita_test.png");
+		m_bg_texture = Texture2D::CreateIns("assets/textures/checkboard.png");
+		//m_some_ele = SubTexture2D::CreateFromCoords(m_sprite_sheet, {}, {});
 
 		// build frame buffer
-		Swallow::FrameBufferSpecification FB_spec;
+		FrameBufferSpecification FB_spec;
 		FB_spec.width = 1280;
 		FB_spec.height = 720;
-		m_frame_buffer = Swallow::FrameBuffer::Create(FB_spec);
+		m_frame_buffer = FrameBuffer::Create(FB_spec);
 
+		m_active_scene = CreateRef<Scene>();
+
+		auto square = m_active_scene->CreateEntity();
+		m_active_scene->Reg().emplace<TransformComponent>(square);
+		m_active_scene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		 
 		//m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
 		//	m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
 		//m_particle.size_begin = 0.1f,
@@ -47,7 +56,7 @@ namespace Swallow {
 
 	}
 
-	void EditorLayer::OnUpdate(Swallow::TimeStep time_step)
+	void EditorLayer::OnUpdate(TimeStep time_step)
 	{
 		SW_PROFILE_FUNCTION();
 
@@ -57,70 +66,39 @@ namespace Swallow {
 			m_camera_controller.OnUpdata(time_step);
 
 		//--------------Render-------------------
-		Swallow::Renderer2D::ResetStats();
+		Renderer2D::ResetStats();
 		{
-			SW_PROFILE_SCOPE("Render-pre -// void EditorLayer::OnUpdate(Swallow::TimeStep)");
+			SW_PROFILE_SCOPE("Render-pre -// void EditorLayer::OnUpdate(TimeStep)");
 			m_frame_buffer->Bind();
-			Swallow::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-			Swallow::RenderCommand::Clear();
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			RenderCommand::Clear();
 		}
 
 		{
-			SW_PROFILE_SCOPE("Render-draw -// void EditorLayer::OnUpdate(Swallow::TimeStep");
+			SW_PROFILE_SCOPE("Render-draw -// void EditorLayer::OnUpdate(TimeStep");
 
 			static float rotation = 0.0f;
 			rotation += time_step * 30.f;
 			rotation = rotation > 180.f ? -180.f : rotation;
-			if (rotation >= 18000.f)
-				SW_CORE_ASSERT(false, "too big");
 
-			Swallow::Renderer2D::BeginScene(m_camera_controller.GetCamera());
+			Renderer2D::BeginScene(m_camera_controller.GetCamera());
 
-			//Swallow::Renderer2D::DrawRotatedRectangle({ -1.0f, 0.0f }, { 0.8f, 0.8f }, 45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
-			//Swallow::Renderer2D::DrawRectangle({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-			//Swallow::Renderer2D::DrawRotatedRectangle({ 0.5f, -0.5f }, { 0.5f, 0.75f }, 45.0f, m_test_texture, 10.f, { 0.8f, 0.2f, 0.3f, 1.0f });
-			//Swallow::Renderer2D::DrawRectangle({ 0.0f, 0.2f }, { 0.5f, 0.5f }, { 1.0f, 1.0f, 0.8f, 1.0f });
-			//Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.2f }, { 0.5f, 0.5f }, rotation, { 1.0f, 1.0f, 0.8f, 1.0f });
-			//Swallow::Renderer2D::DrawRectangle({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-			Swallow::Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f }, { 50.f, 50.f }, m_bg_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
-			Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(0.f), m_test_texture, 1.0f);
-			Swallow::Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), m_test_texture, 1.0f);
-			Swallow::Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
+			Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f }, { 50.f, 50.f }, m_bg_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
+			Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(0.f), m_test_texture, 1.0f);
+			Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), m_test_texture, 1.0f);
+			Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
 
-			Swallow::Renderer2D::EndScene();
+			Renderer2D::EndScene();
 
 			// scene2 test
-			Swallow::Renderer2D::BeginScene(m_camera_controller.GetCamera());
+			Renderer2D::BeginScene(m_camera_controller.GetCamera());
 
-			//for (float y = -5.0f; y < 5.0f; y += 0.5f)
-			//	for (float x = -5.0f; x < 5.0f; x += 0.5f)
-			//	{
-			//		glm::vec4 color  = { (x + 5.f) / 10.f, 0.4f, (y + 5.f) / 10.f, 0.7f};
-			//		Swallow::Renderer2D::DrawRectangle({ x, y }, { 0.45f, 0.45f }, color);
-			//	}
+			//Update-Scene
+			m_active_scene->OnUpdate(time_step);
 
-			Swallow::Renderer2D::EndScene();
+			Renderer2D::EndScene();
 
 		}
-
-		//if (Swallow::Input::IsMouseButtonDown(SW_MOUSE_BUTTON_LEFT))
-		//{
-		//	SW_PROFILE_SCOPE("particle render -// void EditorLayer::OnUpdate(Swallow::TimeStep");
-		//	;
-		//	auto [x, y] = Swallow::Input::GetMousePos();
-		//	auto width = Swallow::Application::GetIns().GetWindow().GetWidth();
-		//	auto height = Swallow::Application::GetIns().GetWindow().GetHeight();
-
-		//	auto bounds = m_camera_controller.GetBounds();
-		//	auto pos = m_camera_controller.GetCamera().GetPosition();
-		//	x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-		//	y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-		//	m_particle.position = { x + pos.x, y + pos.y };
-		//	for (int i = 0; i < 1; i++)
-		//		m_particle_system.Emit(m_particle);
-		//}
-		//m_particle_system.OnUpdate(time_step);
-		//m_particle_system.OnRender(m_camera_controller.GetCamera());
 
 		m_frame_buffer->Unbind();
 	}
@@ -173,7 +151,7 @@ namespace Swallow {
 				if (ImGui::BeginMenu("File"))
 				{
 					if (ImGui::MenuItem("Exit"))
-						Swallow::Application::GetIns().Close();
+						Application::GetIns().Close();
 					ImGui::EndMenu();
 				}
 
@@ -182,7 +160,7 @@ namespace Swallow {
 
 			ImGui::Begin("Settings");
 
-			auto status = Swallow::Renderer2D::GetStats();
+			auto status = Renderer2D::GetStats();
 			ImGui::Text("Renderer2D Stats");
 			ImGui::Text("Draw Calls: %d", status.DrawCalls);
 			ImGui::Text("Quads:      %d", status.QuadCount);
@@ -211,8 +189,8 @@ namespace Swallow {
 
 			ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
 
-			if (!(IsEqual(viewport_panel_size.x, m_viewport_size.x) && IsEqual(viewport_panel_size.y, m_viewport_size.y))
-				 && m_viewport_size.x > 0 && m_viewport_size.y > 0)
+			if ((!IsEqual(viewport_panel_size.x, m_viewport_size.x) || !IsEqual(viewport_panel_size.y, m_viewport_size.y))
+					&& m_viewport_size.x > 0 && m_viewport_size.y > 0)
 			{
 				m_frame_buffer->Resize(viewport_panel_size.x, viewport_panel_size.y);
 				m_viewport_size = { viewport_panel_size.x, viewport_panel_size.y };
@@ -231,7 +209,7 @@ namespace Swallow {
 		{
 			ImGui::Begin("Settings");
 
-			auto status = Swallow::Renderer2D::GetStats();
+			auto status = Renderer2D::GetStats();
 			ImGui::Text("Renderer2D Stats");
 			ImGui::Text("Draw Calls: %d", status.DrawCalls);
 			ImGui::Text("Quads:      %d", status.QuadCount);
@@ -251,9 +229,16 @@ namespace Swallow {
 			ImGui::Image(reinterpret_cast<void*>(m_frame_buffer->GetColorAttachment()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::End();
 		}
+
+		ImGui::Begin("Debug Info");
+		ImGui::Text("Viewport Size: %.1f x %.1f", m_viewport_size.x, m_viewport_size.y);
+		ImGui::Text("FrameBuffer ID: %d", m_frame_buffer->GetColorAttachment());
+		ImGui::Text("View Focused: %s", m_view_is_focused ? "Yes" : "No");
+		ImGui::Text("View Hovered: %s", m_view_is_hovered ? "Yes" : "No");
+		ImGui::End();
 	}
 
-	void EditorLayer::OnEvent(Swallow::Event& event)
+	void EditorLayer::OnEvent(Event& event)
 	{
 		m_camera_controller.OnEvent(event);
 	}
