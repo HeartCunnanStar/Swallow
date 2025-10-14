@@ -2,8 +2,11 @@
 #include "Scene.h"
 
 #include "Components.h"
+#include "Swallow/Renderer/Renderer2D.h"
 
 #include <glm/glm.hpp>
+
+#include "Entity.h"
 
 namespace Swallow {
 
@@ -15,9 +18,15 @@ namespace Swallow {
 	{
 	}
 
-	entt::entity Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& name)
 	{
-		return entt::entity();
+		Entity entity = { m_registry.create(), this };
+
+		// default have transform and tag component
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>(name);
+		tag.tag = name.empty() ? "Entity" : name;
+		return entity;
 	}
 
 	void Scene::OnUpdate(TimeStep time_step)
@@ -26,6 +35,8 @@ namespace Swallow {
 		for (auto entity : group)
 		{
 			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+			Renderer2D::DrawRectangle(transform, sprite.color);
 		}
 
 	}

@@ -15,6 +15,7 @@
 
 #include "Swallow/ImGui/ImGuiLayer.h"
 
+#include "Swallow/Scene/Entity.h"
 #include "Swallow/Scene/Scene.h"
 #include "Swallow/Scene/Components.h"
 

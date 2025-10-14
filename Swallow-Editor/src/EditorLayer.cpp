@@ -10,8 +10,8 @@
 
 namespace Swallow {
 
-	EditorLayer::EditorLayer() : 
-		Layer("EditorLayer"), 
+	EditorLayer::EditorLayer() :
+		Layer("EditorLayer"),
 		m_camera_controller(1280.f / 720.f, true),
 		m_viewport_size(1280.0f, 720.0f)
 	{
@@ -34,10 +34,11 @@ namespace Swallow {
 
 		m_active_scene = CreateRef<Scene>();
 
-		auto square = m_active_scene->CreateEntity();
-		m_active_scene->Reg().emplace<TransformComponent>(square);
-		m_active_scene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
-		 
+		// create entity
+		auto square = m_active_scene->CreateEntity("Square");
+		square.AddComponent<SpriteRendererComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+		m_square_entity = square;
 		//m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
 		//	m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
 		//m_particle.size_begin = 0.1f,
@@ -83,10 +84,11 @@ namespace Swallow {
 
 			Renderer2D::BeginScene(m_camera_controller.GetCamera());
 
-			Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f }, { 50.f, 50.f }, m_bg_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
-			Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(0.f), m_test_texture, 1.0f);
-			Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), m_test_texture, 1.0f);
-			Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
+			//Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f }, { 50.f, 50.f }, m_bg_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
+			//Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(0.f), m_test_texture, 1.0f);
+			//Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), m_test_texture, 1.0f);
+			//Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
+
 
 			Renderer2D::EndScene();
 
@@ -166,16 +168,24 @@ namespace Swallow {
 			ImGui::Text("Quads:      %d", status.QuadCount);
 			ImGui::Text("Vertices:   %d", status.GetTotalVertexCount());
 			ImGui::Text("Indices:    %d", status.GetTotalIndexCount());
-			//for (auto& result : m_performance_result)
-			//{
-			//	char label_buffer[64];
-			//	strcpy(label_buffer, result.name);
-			//	strcat(label_buffer, " %.3fms");
-			//	ImGui::Text(label_buffer, result.time);
-			//}
-			//m_performance_result.clear();
 
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_square_color));
+			ImGui::Separator();
+
+			ImGui::Text("Viewport Info");
+			ImGui::Text("Viewport Size: %.1f x %.1f", m_viewport_size.x, m_viewport_size.y);
+			ImGui::Text("FrameBuffer ID: %d", m_frame_buffer->GetColorAttachment());
+			ImGui::Text("View Focused: %s", m_view_is_focused ? "Yes" : "No");
+			ImGui::Text("View Hovered: %s", m_view_is_hovered ? "Yes" : "No");
+
+			if (m_square_entity)
+			{
+				ImGui::Separator();
+				auto& tag = m_square_entity.GetComponent<TagComponent>().tag;
+				ImGui::Text(tag.c_str());
+				auto& square_color = m_square_entity.GetComponent<SpriteRendererComponent>().color;
+				ImGui::ColorEdit4("Square Color", glm::value_ptr(square_color));
+				ImGui::Separator();
+			}
 
 			ImGui::End();
 
@@ -190,7 +200,7 @@ namespace Swallow {
 			ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
 
 			if ((!IsEqual(viewport_panel_size.x, m_viewport_size.x) || !IsEqual(viewport_panel_size.y, m_viewport_size.y))
-					&& m_viewport_size.x > 0 && m_viewport_size.y > 0)
+				&& m_viewport_size.x > 0 && m_viewport_size.y > 0)
 			{
 				m_frame_buffer->Resize(viewport_panel_size.x, viewport_panel_size.y);
 				m_viewport_size = { viewport_panel_size.x, viewport_panel_size.y };
@@ -229,13 +239,6 @@ namespace Swallow {
 			ImGui::Image(reinterpret_cast<void*>(m_frame_buffer->GetColorAttachment()), ImVec2(1280.f, 720.f), ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::End();
 		}
-
-		ImGui::Begin("Debug Info");
-		ImGui::Text("Viewport Size: %.1f x %.1f", m_viewport_size.x, m_viewport_size.y);
-		ImGui::Text("FrameBuffer ID: %d", m_frame_buffer->GetColorAttachment());
-		ImGui::Text("View Focused: %s", m_view_is_focused ? "Yes" : "No");
-		ImGui::Text("View Hovered: %s", m_view_is_hovered ? "Yes" : "No");
-		ImGui::End();
 	}
 
 	void EditorLayer::OnEvent(Event& event)

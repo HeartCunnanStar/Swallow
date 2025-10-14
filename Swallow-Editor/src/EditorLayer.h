@@ -20,6 +20,7 @@ namespace Swallow {
 		OrthographicCameraController m_camera_controller;
 
 		Ref<Scene> m_active_scene;
+		Entity m_square_entity;
 
 		Ref<VertexArray> m_squareVA;
 		Ref<Shader> m_shader;

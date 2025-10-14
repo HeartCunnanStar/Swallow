@@ -6,14 +6,15 @@
 
 namespace Swallow {
 
+	class Entity;
+
 	class Scene
 	{
 	public:
 		Scene();
 		~Scene();
 
-		// Temp
-		entt::entity CreateEntity();
+		Entity CreateEntity(const std::string& name = std::string());
 
 		// Temp
 		entt::registry& Reg() { return m_registry; }
@@ -22,5 +23,7 @@ namespace Swallow {
 
 	private:
 		entt::registry m_registry;
+
+		friend class Entity;
 	};
 }
