@@ -1,11 +1,11 @@
 #include "swpch.h"
 #include "Renderer2D.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Swallow/Renderer/RenderCommand.h"
-
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace Swallow {
 
@@ -125,6 +125,22 @@ namespace Swallow {
 	void Renderer2D::Shutdown()
 	{
 		SW_PROFILE_FUNCTION();
+	}
+
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		SW_PROFILE_FUNCTION();
+
+		//RenderCommand::SetDepthTest(false);
+
+		glm::mat4 view_projection = camera.GetProjetionMatrix() * glm::inverse(transform);
+
+		s_data.texture_shader->Bind();
+		s_data.texture_shader->SetMat4("u_ViewProjection", view_projection);
+
+		s_data.quad_idx_cnt = 0;
+		s_data.quadVB_cur = s_data.quadVB_base;
+		s_data.texture_slot_idx = 1;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)

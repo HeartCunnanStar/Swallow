@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Swallow/Renderer/Camera.h"
+
 namespace Swallow{
 
 	struct TagComponent 
@@ -38,5 +40,17 @@ namespace Swallow{
 
 		operator glm::vec4& () { return color; }
 		operator const glm::vec4& () const { return color; }
+	};
+
+	struct CameraComponent
+	{
+		Swallow::Camera camera;
+		bool is_primary = true; // TODO: move to scene
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4 & projection)
+			: camera(projection) { }
+		
 	};
 }

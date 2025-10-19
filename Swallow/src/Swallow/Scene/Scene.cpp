@@ -31,13 +31,38 @@ namespace Swallow {
 
 	void Scene::OnUpdate(TimeStep time_step)
 	{
-		auto group = m_registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
-		{
-			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+		Camera* primary_camera = nullptr;
+		glm::mat4* camera_tranform = nullptr;
 
-			Renderer2D::DrawRectangle(transform, sprite.color);
+		{
+			auto group = m_registry.view<TransformComponent, CameraComponent>();
+			for (auto entity : group)
+			{
+				auto& [transform_cp, camera_cp] = group.get<TransformComponent, CameraComponent>(entity);
+
+				// find the primary camera;
+				if (camera_cp.is_primary)
+				{
+					primary_camera = &camera_cp.camera;
+					camera_tranform = &transform_cp.transform;
+					break;
+				}
+			}
 		}
 
+		if (primary_camera)
+		{
+			Renderer2D::BeginScene(primary_camera->GetProjetionMatrix(), *camera_tranform);
+
+			auto group = m_registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group)
+			{
+				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				Renderer2D::DrawRectangle(transform, sprite.color);
+			}
+
+			Renderer2D::EndScene();
+		}
 	}
 }

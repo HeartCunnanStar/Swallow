@@ -21,6 +21,10 @@ namespace Swallow {
 
 		Ref<Scene> m_active_scene;
 		Entity m_square_entity;
+		Entity m_camera_entity;
+		Entity m_camera_test_entity;
+
+		bool m_camera_switch = true;
 
 		Ref<VertexArray> m_squareVA;
 		Ref<Shader> m_shader;

@@ -35,10 +35,18 @@ namespace Swallow {
 		m_active_scene = CreateRef<Scene>();
 
 		// create entity
-		auto square = m_active_scene->CreateEntity("Square");
+		auto square = m_active_scene->CreateEntity("Default square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
 		m_square_entity = square;
+
+		m_camera_entity = m_active_scene->CreateEntity("Camera entity");
+		m_camera_entity.AddComponent<CameraComponent>(glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f));
+
+		m_camera_test_entity = m_active_scene->CreateEntity("Camera entity");
+		auto& temp = m_camera_test_entity.AddComponent<CameraComponent>(glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f));
+		temp.is_primary = false;
+
 		//m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
 		//	m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
 		//m_particle.size_begin = 0.1f,
@@ -69,37 +77,17 @@ namespace Swallow {
 		//--------------Render-------------------
 		Renderer2D::ResetStats();
 		{
-			SW_PROFILE_SCOPE("Render-pre -// void EditorLayer::OnUpdate(TimeStep)");
+			SW_PROFILE_SCOPE("Render-pre");
 			m_frame_buffer->Bind();
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 			RenderCommand::Clear();
 		}
 
 		{
-			SW_PROFILE_SCOPE("Render-draw -// void EditorLayer::OnUpdate(TimeStep");
-
-			static float rotation = 0.0f;
-			rotation += time_step * 30.f;
-			rotation = rotation > 180.f ? -180.f : rotation;
-
-			Renderer2D::BeginScene(m_camera_controller.GetCamera());
-
-			//Renderer2D::DrawRectangle({ -5.f, -5.f, -0.1f }, { 50.f, 50.f }, m_bg_texture, 100.0f, glm::vec4(0.2f, 0.9f, 0.9f, 1.0f));
-			//Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(0.f), m_test_texture, 1.0f);
-			//Renderer2D::DrawRotatedRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), m_test_texture, 1.0f);
-			//Renderer2D::DrawRectangle({ 0.0f, 0.0f }, { 0.5f, 0.5f }, m_test_texture, 1.0f);
-
-
-			Renderer2D::EndScene();
-
-			// scene2 test
-			Renderer2D::BeginScene(m_camera_controller.GetCamera());
+			SW_PROFILE_SCOPE("Render-draw");
 
 			//Update-Scene
 			m_active_scene->OnUpdate(time_step);
-
-			Renderer2D::EndScene();
-
 		}
 
 		m_frame_buffer->Unbind();
@@ -185,6 +173,15 @@ namespace Swallow {
 				auto& square_color = m_square_entity.GetComponent<SpriteRendererComponent>().color;
 				ImGui::ColorEdit4("Square Color", glm::value_ptr(square_color));
 				ImGui::Separator();
+			}
+
+			// control camera transform
+			ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_camera_entity.GetComponent<TransformComponent>().transform[3]));
+			
+			if (ImGui::Checkbox("Camera A", &m_camera_switch))
+			{
+				m_camera_entity.GetComponent<CameraComponent>().is_primary = m_camera_switch;
+				m_camera_test_entity.GetComponent<CameraComponent>().is_primary = !m_camera_switch;
 			}
 
 			ImGui::End();
