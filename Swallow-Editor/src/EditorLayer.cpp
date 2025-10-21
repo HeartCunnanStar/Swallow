@@ -46,17 +46,6 @@ namespace Swallow {
 		m_camera_test_entity = m_active_scene->CreateEntity("Camera entity");
 		auto& temp = m_camera_test_entity.AddComponent<CameraComponent>(glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f));
 		temp.is_primary = false;
-
-		//m_particle.color_begin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f },
-		//	m_particle.color_end = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
-		//m_particle.size_begin = 0.1f,
-		//	m_particle.size_end = 0.0f;
-
-		//m_particle.size_variation = 0.3f;
-		//m_particle.life_time = 5.0f;
-		//m_particle.velocity = { 0.0f, 0.0f };
-		//m_particle.velocity_variation = { 3.0f, 1.0f };
-		//m_particle.position = { 0.0f, 0.0f };
 	}
 
 	void EditorLayer::OnDetach()
@@ -69,10 +58,21 @@ namespace Swallow {
 	{
 		SW_PROFILE_FUNCTION();
 
+		//------------Resize---------------------
+		FrameBufferSpecification& spec = m_frame_buffer->GetSpecification();
+		if ( m_viewport_size.x > 0 && m_viewport_size.y > 0 &&
+			(!IsEqual(spec.width, m_viewport_size.x) || !IsEqual(spec.height, m_viewport_size.y)))
+		{
+			m_frame_buffer->Resize(static_cast<uint32_t>(m_viewport_size.x), static_cast<uint32_t>(m_viewport_size.y));
+			m_camera_controller.OnResize(m_viewport_size.x, m_viewport_size.y);
+			//SW_INFO("Viewport size: {0}, {1}", viewport_panel_size.x, viewport_panel_size.y);
+		}
+
 		//--------------Updata-------------------
 		//Timer timer("EditorLayer::Onupdate", [&](auto performance_data) {m_porformance_result.push_back(performance_data)});
 		if (m_view_is_focused)
 			m_camera_controller.OnUpdata(time_step);
+
 
 		//--------------Render-------------------
 		Renderer2D::ResetStats();
@@ -149,6 +149,7 @@ namespace Swallow {
 			}
 
 			ImGui::Begin("Settings");
+			ImGui::SetWindowFontScale(1.25f);
 
 			auto status = Renderer2D::GetStats();
 			ImGui::Text("Renderer2D Stats");
@@ -195,16 +196,8 @@ namespace Swallow {
 			Application::GetIns().GetImGuiLayer()->SetBlockEvents(!(m_view_is_focused && m_view_is_hovered));
 
 			ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
+			m_viewport_size = { viewport_panel_size.x, viewport_panel_size.y };
 
-			if ((!IsEqual(viewport_panel_size.x, m_viewport_size.x) || !IsEqual(viewport_panel_size.y, m_viewport_size.y))
-				&& m_viewport_size.x > 0 && m_viewport_size.y > 0)
-			{
-				m_frame_buffer->Resize(viewport_panel_size.x, viewport_panel_size.y);
-				m_viewport_size = { viewport_panel_size.x, viewport_panel_size.y };
-
-				m_camera_controller.OnResize(viewport_panel_size.x, viewport_panel_size.y);
-				//SW_INFO("Viewport size: {0}, {1}", viewport_panel_size.x, viewport_panel_size.y);
-			}
 			uint32_t textureID = m_frame_buffer->GetColorAttachment();
 			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2(m_viewport_size.x, m_viewport_size.y), ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::End();

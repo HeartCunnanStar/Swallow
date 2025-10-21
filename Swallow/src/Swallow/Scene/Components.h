@@ -46,6 +46,7 @@ namespace Swallow{
 	{
 		Swallow::Camera camera;
 		bool is_primary = true; // TODO: move to scene
+		bool aspect_ratio_is_fixed = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;

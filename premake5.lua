@@ -1,7 +1,7 @@
 workspace "Swallow"
 	architecture "x64"
 
-	startproject "sandbox"
+	startproject "Swallow-Editor"
 
 	configurations
 	{
