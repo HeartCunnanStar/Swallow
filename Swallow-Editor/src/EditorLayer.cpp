@@ -40,11 +40,11 @@ namespace Swallow {
 
 		m_square_entity = square;
 
-		m_camera_entity = m_active_scene->CreateEntity("Camera entity");
-		m_camera_entity.AddComponent<CameraComponent>(glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f));
+		m_camera_entity = m_active_scene->CreateEntity("Camera entity A");
+		m_camera_entity.AddComponent<CameraComponent>();
 
-		m_camera_test_entity = m_active_scene->CreateEntity("Camera entity");
-		auto& temp = m_camera_test_entity.AddComponent<CameraComponent>(glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f));
+		m_camera_test_entity = m_active_scene->CreateEntity("Camera entity B");
+		auto& temp = m_camera_test_entity.AddComponent<CameraComponent>();
 		temp.is_primary = false;
 	}
 
@@ -65,12 +65,12 @@ namespace Swallow {
 		{
 			m_frame_buffer->Resize(static_cast<uint32_t>(m_viewport_size.x), static_cast<uint32_t>(m_viewport_size.y));
 			m_camera_controller.OnResize(m_viewport_size.x, m_viewport_size.y);
-			//SW_INFO("Viewport size: {0}, {1}", viewport_panel_size.x, viewport_panel_size.y);
+			m_active_scene->OnViewportResize(static_cast<uint32_t>(m_viewport_size.x), static_cast<uint32_t>(m_viewport_size.y));
 		}
 
 		//--------------Updata-------------------
 		//Timer timer("EditorLayer::Onupdate", [&](auto performance_data) {m_porformance_result.push_back(performance_data)});
-		if (m_view_is_focused)
+		if (m_is_view_focused)
 			m_camera_controller.OnUpdata(time_step);
 
 
@@ -163,8 +163,8 @@ namespace Swallow {
 			ImGui::Text("Viewport Info");
 			ImGui::Text("Viewport Size: %.1f x %.1f", m_viewport_size.x, m_viewport_size.y);
 			ImGui::Text("FrameBuffer ID: %d", m_frame_buffer->GetColorAttachment());
-			ImGui::Text("View Focused: %s", m_view_is_focused ? "Yes" : "No");
-			ImGui::Text("View Hovered: %s", m_view_is_hovered ? "Yes" : "No");
+			ImGui::Text("View Focused: %s", m_is_view_focused ? "Yes" : "No");
+			ImGui::Text("View Hovered: %s", m_is_view_hovered ? "Yes" : "No");
 
 			if (m_square_entity)
 			{
@@ -185,16 +185,25 @@ namespace Swallow {
 				m_camera_test_entity.GetComponent<CameraComponent>().is_primary = !m_camera_switch;
 			}
 
+			{
+				auto& camera = m_camera_test_entity.GetComponent<CameraComponent>().camera;
+				float size = camera.GetOrthographicSize();
+				if (ImGui::DragFloat("Camera B Orthographic Size", &size))
+					camera.SetOrthographicSize(size);
+			}
+
+
 			ImGui::End();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 			ImGui::Begin("Viewport");
 
 			// only when Focused && Hovered will convet events 
-			m_view_is_focused = ImGui::IsWindowFocused();
-			m_view_is_hovered = ImGui::IsWindowHovered();
-			Application::GetIns().GetImGuiLayer()->SetBlockEvents(!(m_view_is_focused && m_view_is_hovered));
+			m_is_view_focused = ImGui::IsWindowFocused();
+			m_is_view_hovered = ImGui::IsWindowHovered();
+			Application::GetIns().GetImGuiLayer()->SetBlockEvents(!(m_is_view_focused && m_is_view_hovered));
 
+			// get widget's panel size from ImGui
 			ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
 			m_viewport_size = { viewport_panel_size.x, viewport_panel_size.y };
 

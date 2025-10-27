@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Swallow/Renderer/Camera.h"
+#include "Swallow/Renderer/SceneCamera.h"
 
 namespace Swallow{
 
@@ -44,14 +44,12 @@ namespace Swallow{
 
 	struct CameraComponent
 	{
-		Swallow::Camera camera;
+		Swallow::SceneCamera camera;
 		bool is_primary = true; // TODO: move to scene
-		bool aspect_ratio_is_fixed = false;
+		bool is_aspect_ratio_fixed = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const glm::mat4 & projection)
-			: camera(projection) { }
 		
 	};
 }

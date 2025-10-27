@@ -51,7 +51,8 @@ namespace Swallow {
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
-	static const double epsilon = 1e-8;
+	template<typename T>
+	constexpr T epsilon = static_cast<T>(1e-6);
 
 	template<class T1, class T2>
 	bool IsEqual(T1 a, T2 b,

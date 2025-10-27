@@ -35,10 +35,10 @@ namespace Swallow {
 		glm::mat4* camera_tranform = nullptr;
 
 		{
-			auto group = m_registry.view<TransformComponent, CameraComponent>();
-			for (auto entity : group)
+			auto view = m_registry.view<TransformComponent, CameraComponent>();
+			for (auto entity : view)
 			{
-				auto& [transform_cp, camera_cp] = group.get<TransformComponent, CameraComponent>(entity);
+				auto& [transform_cp, camera_cp] = view.get<TransformComponent, CameraComponent>(entity);
 
 				// find the primary camera;
 				if (camera_cp.is_primary)
@@ -63,6 +63,20 @@ namespace Swallow {
 			}
 
 			Renderer2D::EndScene();
+		}
+	}
+
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		m_viewport_width = width;
+		m_viewport_height = height;
+
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& camera_component = view.get<CameraComponent>(entity);
+			if (!camera_component.is_aspect_ratio_fixed)
+				camera_component.camera.SetViewportSize(width, height);
 		}
 	}
 }

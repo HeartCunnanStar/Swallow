@@ -8,28 +8,26 @@ namespace Swallow {
 	class SWALLOW_API Camera
 	{
 	public:
+		Camera() = default;
 		Camera(const glm::mat4& projection)
 			: m_projection_matrix(projection) { }
 
-		const glm::vec3& GetPosition() const { return m_position; }
+		//const glm::vec3& GetPosition() const { return m_position; }
 		//void SetPosition(const glm::vec3& position) { m_position = position; RecalculateViewMatrix(); }
 
-		float GetRotation() const { return m_rotation; }
+		//float GetRotation() const { return m_rotation; }
 		//void SetRotation(float rotation) { m_rotation = rotation; RecalculateViewMatrix(); }
 
 		const glm::mat4& GetProjetionMatrix() const { return m_projection_matrix; }
-		const glm::mat4& GetViewMatrix() const { return m_view_matrix; }
-		const glm::mat4& GetViewProjectionMatrix() const { return m_view_projection_matrix; }
+		//const glm::mat4& GetViewMatrix() const { return m_view_matrix; }
+		//const glm::mat4& GetViewProjectionMatrix() const { return m_view_projection_matrix;
 
-	private:
-		//void RecalculateViewMatrix();
+	protected:
+		glm::mat4 m_projection_matrix = glm::mat4(1.f);
+		//glm::mat4 m_view_matrix;
+		//glm::mat4 m_view_projection_matrix;
 
-	private:
-		glm::mat4 m_projection_matrix;
-		glm::mat4 m_view_matrix;
-		glm::mat4 m_view_projection_matrix;
-
-		glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
-		float m_rotation = 0.0f; // rotation for z
+		//glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
+		//float m_rotation = 0.0f; // rotation for z
 	};
 }

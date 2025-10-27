@@ -26,6 +26,8 @@ namespace Swallow {
 
 		bool m_camera_switch = true;
 
+		// in the scene
+
 		Ref<VertexArray> m_squareVA;
 		Ref<Shader> m_shader;
 
@@ -35,8 +37,10 @@ namespace Swallow {
 
 		glm::vec4 m_square_color = { 0.2f, 0.3f, 0.8f, 1.0f };
 
-		bool m_view_is_focused = false;
-		bool m_view_is_hovered = false;
+		// 
+
+		bool m_is_view_focused = false;
+		bool m_is_view_hovered = false;
 
 		glm::vec2 m_viewport_size = { 0.f, 0.f };
 	};
