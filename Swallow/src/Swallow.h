@@ -1,6 +1,7 @@
 #pragma once
 
 // only for applying
+#include "Swallow/Core/Core.h"
 
 #include "Swallow/Core/Application.h"
 #include "Swallow/Core/Layer.h"
@@ -14,11 +15,17 @@
 
 #include "Swallow/ImGui/ImGuiLayer.h"
 
+#include "Swallow/Scene/Entity.h"
+#include "Swallow/Scene/Scene.h"
+#include "Swallow/Scene/Components.h"
+
 // ----------Renderer--------------
 #include "Swallow/Renderer/Buffer.h"
+#include "Swallow/Renderer/FrameBuffer.h"
 #include "Swallow/Renderer/Shader.h"
 #include "Swallow/Renderer/VertexArray.h"
 #include "Swallow/Renderer/Texture.h"
+#include "Swallow/Renderer/SubTexture2D.h"
 
 #include "Swallow/Renderer/RenderCommand.h"
 #include "Swallow/Renderer/Renderer.h"

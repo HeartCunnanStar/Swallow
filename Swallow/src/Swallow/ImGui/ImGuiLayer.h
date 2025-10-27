@@ -12,12 +12,13 @@ namespace Swallow {
 	{
 	public:
 		ImGuiLayer();
-		~ImGuiLayer();
+		~ImGuiLayer() = default;
 
 		//virtual void OnUpdate() override;
 
 		virtual void OnDetach() override;
 		virtual void OnAttach() override;
+		virtual void OnEvent(Event& event) override;
 
 		// ImGui layer shouldn't render things, all render work should be done by renderer
 		//virtual void OnImGuiRender() override;
@@ -25,7 +26,10 @@ namespace Swallow {
 		void Begin();
 		void End();
 
+		void SetBlockEvents(bool flag) { m_is_blocking_events = flag; }
+
 	private:
+		bool m_is_blocking_events = true;
 		float m_time = 0.0f;
 	};
 

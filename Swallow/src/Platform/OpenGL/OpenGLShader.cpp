@@ -77,6 +77,13 @@ namespace Swallow {
 		UploadUniformInt(name, value);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& name, int* values, uint32_t cnt)
+	{
+		SW_PROFILE_FUNCTION();
+
+		UploadUniformIntArray(name, values, cnt);
+	}
+
 	void OpenGLShader::SetFloat(const std::string& name, float value)
 	{
 		SW_PROFILE_FUNCTION();
@@ -157,6 +164,12 @@ namespace Swallow {
 	{
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::UploadUniformIntArray(const std::string& name, int* values, uint32_t cnt)
+	{
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		glUniform1iv(location, cnt, values);
 	}
 
 	std::string OpenGLShader::ReadFile(const std::string& path)

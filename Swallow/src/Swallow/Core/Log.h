@@ -1,10 +1,12 @@
 #pragma once
 
-#include <memory>
-
 #include "Core.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
+
+// ignore all warnings from spdlog
+#pragma warning(push, 0)
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+#pragma warning(pop)
 
 namespace Swallow {
 

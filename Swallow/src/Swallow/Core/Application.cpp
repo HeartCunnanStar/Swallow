@@ -16,14 +16,14 @@ namespace Swallow {
 
 	Application* Application::s_instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		SW_PROFILE_FUNCTION();
 
 		SW_CORE_ASSERT(!s_instance, "Application instance already had one");
 		s_instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::CreateIns());
+		m_window = std::unique_ptr<Window>(Window::CreateIns(WindowProps(name)));
 		m_window->SetEventCallback(SW_BIND_EVENT_FN(Application::OnEvent));
 		//m_window->SetVSync(false);
 
@@ -81,7 +81,7 @@ namespace Swallow {
 			SW_PROFILE_SCOPE("App run loop -// void Application::Run()");
 
 			// Temporary
-			float time = glfwGetTime();
+			float time = static_cast<float>(glfwGetTime());
 			TimeStep time_step = time - m_last_time;
 			m_last_time = time;
 
@@ -108,6 +108,11 @@ namespace Swallow {
 
 			m_window->OnUpdate();
 		}
+	}
+
+	void Application::Close()
+	{
+		m_running = false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

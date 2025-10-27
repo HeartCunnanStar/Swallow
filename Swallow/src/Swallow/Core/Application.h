@@ -16,10 +16,11 @@ namespace Swallow {
 	class SWALLOW_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Swallow App");
 		virtual ~Application();
 
 		void Run();
+		void Close();
 
 		void OnEvent(Event& event);
 
@@ -27,6 +28,7 @@ namespace Swallow {
 		void PushOverlayer(Layer* layer);
 
 		inline Window& GetWindow() { return *m_window; }
+		inline ImGuiLayer* GetImGuiLayer() { return m_imgui_layer; }
 
 		inline static Application& GetIns() { return *s_instance; }
 

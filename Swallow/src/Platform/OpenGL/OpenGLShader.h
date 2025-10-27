@@ -23,6 +23,7 @@ namespace Swallow {
 		virtual void Unbind() const override;
 
 		virtual void SetInt(const std::string& name, int value) override;
+		virtual void SetIntArray(const std::string& name, int* values, uint32_t cnt) override;
 		virtual void SetFloat(const std::string& name, float value) override;
 		virtual void SetFloat2(const std::string& name, const glm::vec2 value) override;
 		virtual void SetFloat3(const std::string& name, const glm::vec3 value) override;
@@ -40,6 +41,7 @@ namespace Swallow {
 		void UploadUniformFloat4(const std::string& name, const glm::vec4 value);
 
 		void UploadUniformInt(const std::string& name, int value);
+		void UploadUniformIntArray(const std::string& name, int* values, uint32_t cnt);
 		//void UploadUniformInt2(const std::string& name, const glm::vec4 value);
 		//void UploadUniformInt3(const std::string& name, const glm::vec4 value);
 		//void UploadUniformInt4(const std::string& name, const glm::vec4 value);

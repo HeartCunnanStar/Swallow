@@ -40,6 +40,18 @@ namespace Swallow {
 		return nullptr;
 	}
 
+	Ref<VertexBuffer> VertexBuffer::CreateIns(uint32_t size)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>(size); break;
+		case RendererAPI::API::None: SW_CORE_ASSERT(false, "RendererAPI is none!"); break;
+		}
+
+		SW_CORE_ASSERT(false, "Unknown chosen API!");
+		return nullptr;
+	}
+
 	Ref<IndexBuffer> IndexBuffer::CreateIns(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())

@@ -8,6 +8,15 @@
 
 namespace Swallow {
 
+	struct OrthographicCameraBounds
+	{
+		float left, right;
+		float bottom, top;
+
+		float GetWidth() const { return right - left; }
+		float GetHeight() const { return top - bottom; }
+	};
+
 	class SWALLOW_API OrthographicCameraController
 	{
 	public:
@@ -15,16 +24,22 @@ namespace Swallow {
 
 		void OnUpdata(TimeStep time_step);
 		void OnEvent(Event& event);
+		void OnResize(float width, float height);
 
-		OrthographicCamera& GerCamera() { return m_camera; }
-		const OrthographicCamera& GerCamera() const { return m_camera; }
+		OrthographicCamera& GetCamera() { return m_camera; }
+		const OrthographicCamera& GetCamera() const { return m_camera; }
 
-		void SetZoomLevel(float level) { m_zoom_level = level; }
+		void SetZoomLevel(float level) { m_zoom_level = level; CalculateView(); }
 		float GetZoomLevel() const { return m_zoom_level; }
+
+
+		const OrthographicCameraBounds& GetBounds() const { return m_bounds; }
 
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& event);
 		bool OnWindowResized(WindowResizeEvent& event);
+
+		void CalculateView();
 
 	private:
 		float m_aspect_ratio;
@@ -35,6 +50,7 @@ namespace Swallow {
 		float m_camera_move_speed = 1.0f, m_camera_rotation_speed = 20.0f;
 		glm::vec3 m_camera_position = { 0.0f, 0.0f, 0.0f };
 
+		OrthographicCameraBounds m_bounds;
 		OrthographicCamera m_camera;
 	};
 }

@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Swallow\third_part
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Swallow", "Swallow\Swallow.vcxproj", "{CE8E8F15-3A6E-0EB1-4386-9987AFE47412}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Swallow-Editor", "Swallow-Editor\Swallow-Editor.vcxproj", "{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,12 @@ Global
 		{CE8E8F15-3A6E-0EB1-4386-9987AFE47412}.Dist|x64.Build.0 = Dist|x64
 		{CE8E8F15-3A6E-0EB1-4386-9987AFE47412}.Release|x64.ActiveCfg = Release|x64
 		{CE8E8F15-3A6E-0EB1-4386-9987AFE47412}.Release|x64.Build.0 = Release|x64
+		{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}.Debug|x64.ActiveCfg = Debug|x64
+		{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}.Debug|x64.Build.0 = Debug|x64
+		{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}.Dist|x64.ActiveCfg = Dist|x64
+		{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}.Dist|x64.Build.0 = Dist|x64
+		{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}.Release|x64.ActiveCfg = Release|x64
+		{C2DEFA2F-AEAC-EE35-9740-5F5C83ADCA9A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

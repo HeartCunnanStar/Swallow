@@ -1,7 +1,7 @@
 workspace "Swallow"
 	architecture "x64"
 
-	startproject "sandbox"
+	startproject "Swallow-Editor"
 
 	configurations
 	{
@@ -20,10 +20,11 @@ filter "system:windows"
     
 -- include dir relative to root folder (solution dir)
 IncludeDir = {}
-IncludeDir["GLFW"] = "Swallow/third_party/GLFW/include"
-IncludeDir["Glad"] = "Swallow/third_party/Glad/include"
-IncludeDir["ImGui"] = "Swallow/third_party/imgui"
-IncludeDir["glm"] = "Swallow/third_party/glm"
+IncludeDir["glm"]       = "Swallow/third_party/glm"
+IncludeDir["GLFW"]      = "Swallow/third_party/GLFW/include"
+IncludeDir["Glad"]      = "Swallow/third_party/Glad/include"
+IncludeDir["entt"]      = "Swallow/third_party/entt/include"
+IncludeDir["ImGui"]     = "Swallow/third_party/imgui"
 IncludeDir["stb_image"] = "Swallow/third_party/stb_image"
 
 include "Swallow/third_party/GLFW"
@@ -51,7 +52,6 @@ project "Swallow"
 		"%{prj.name}/third_party/stb_image/**.h",
 		"%{prj.name}/third_party/glm/glm/**.hpp",
 		"%{prj.name}/third_party/glm/glm/**.inl"
-
 	}
 
 	includedirs
@@ -62,7 +62,8 @@ project "Swallow"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -129,7 +130,61 @@ project "sandbox"
 		"Swallow/third_party/spdlog/include",
 		"Swallow/third_party/imgui",
 		"Swallow/src",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
+	}
+
+	links
+	{
+		"Swallow"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"SW_PLATFORMS_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "SW_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "SW_RELEASE"
+		runtime "Release"
+		optimize "on"
+			
+	filter "configurations:Dist"
+		defines "SW_DIST"
+		runtime "Release"		
+		optimize "on"
+
+project "Swallow-Editor"
+	location "Swallow-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs 
+	{
+		"Swallow/third_party/spdlog/include",
+		"Swallow/third_party/imgui",
+		"Swallow/src",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
